@@ -96,7 +96,7 @@
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="textDX.cpp" />
-    <ClCompile Include="threeCsDX.cpp" />
+    <ClCompile Include="ninjaGhost.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -107,7 +107,7 @@
     <ClInclude Include="graphics.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="textDX.h" />
-    <ClInclude Include="threeCsDX.h" />
+    <ClInclude Include="ninjaGhost.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

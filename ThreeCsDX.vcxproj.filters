@@ -33,7 +33,7 @@
     <ClCompile Include="textDX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="threeCsDX.cpp">
+    <ClCompile Include="ninjaGhost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,10 +56,10 @@
     <ClInclude Include="textDX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="threeCsDX.h">
+    <ClInclude Include="gameError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gameError.h">
+    <ClInclude Include="ninjaGhost.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
