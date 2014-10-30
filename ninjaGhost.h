@@ -10,6 +10,7 @@
 #include "game.h"
 #include "textDX.h"
 #include "constants.h"
+#include "entity.h"
 
 class NinjaGhost : public Game
 {
