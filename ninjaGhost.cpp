@@ -35,6 +35,13 @@ void NinjaGhost::initialize(HWND hwnd)
 	}
 	if (!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 0, &PlayerTextureManager))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
+	// menu init
+	mainMenu = new Menu();
+	mainMenu->initialize(graphics, input);
+
+	// state init
+	timeInState = 0;
+	gameState = MAIN_MENU;
 
 	return;
 }
@@ -48,6 +55,19 @@ void NinjaGhost::reset()
 	return;
 }
 
+
+
+
+// update game state information
+void NinjaGhost::gameStateUpdate()
+{
+	timeInState += frameTime;
+	if(gameState == MAIN_MENU && input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 0)
+	{
+		gameState = INTRO1;
+		timeInState = 0;
+	}
+}
 //=============================================================================
 // move all game items
 // frameTime is used to regulate the speed of movement
@@ -55,6 +75,17 @@ void NinjaGhost::reset()
 void NinjaGhost::update()
 {
 	player.update(frameTime);
+	gameStateUpdate();
+	
+	switch(gameState)
+	{
+	case MAIN_MENU:
+		mainMenu->update();
+		break;
+	
+	}
+	
+
 }
 
 //=============================================================================
@@ -64,6 +95,15 @@ void NinjaGhost::render()
 {
 	graphics->spriteBegin();
 	player.draw();
+
+	switch(gameState)
+	{
+	case MAIN_MENU:
+		mainMenu->displayMenu();
+		break;
+	
+	}
+	
 	graphics->spriteEnd();
 }
 

@@ -12,6 +12,7 @@
 #include "constants.h"
 #include "entity.h"
 #include "Player.h"
+#include "menu.h"
 
 class NinjaGhost : public Game
 {
@@ -20,6 +21,14 @@ private:
 	// game variables
 	Player player;
 	TextureManager PlayerTextureManager;
+
+	//MENU STUFF
+	Menu *mainMenu;
+
+	//STATE STUFF
+	GameStates gameState;
+	float timeInState;
+	void gameStateUpdate();
 
 public:
 	NinjaGhost();
