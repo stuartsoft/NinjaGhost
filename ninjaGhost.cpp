@@ -28,6 +28,10 @@ NinjaGhost::~NinjaGhost()
 void NinjaGhost::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd);
+
+	timeInState = 0;
+	gameState = mainMenu;
+
 	return;
 }
 
@@ -40,6 +44,14 @@ void NinjaGhost::reset()
 	return;
 }
 
+
+
+
+// update game state information
+void NinjaGhost::gameStateUpdate()
+{
+	timeInState += frameTime;
+}
 //=============================================================================
 // move all game items
 // frameTime is used to regulate the speed of movement

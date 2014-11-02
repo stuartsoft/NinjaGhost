@@ -18,6 +18,11 @@ private:
 	// game items
 	// game variables
 
+	//STATE STUFF
+	GameStates gameState;
+	float timeInState;
+	void gameStateUpdate();
+
 public:
 	NinjaGhost();
 	virtual ~NinjaGhost();

@@ -58,5 +58,10 @@ const UCHAR ALT_KEY      = VK_MENU;     // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
 
 
+// States
+enum GameStates {mainMenu, intro1, level1, intro2, level2, gameOver};
+
+
+
 
 #endif
