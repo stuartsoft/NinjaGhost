@@ -31,8 +31,8 @@
 const char CLASS_NAME[] = "ThreeCsDX";
 const char GAME_TITLE[] = "Three Cs DirectX";
 const bool FULLSCREEN = false;          // windowed or fullscreen
-const UINT GAME_WIDTH = 640;			// width of game in pixels
-const UINT GAME_HEIGHT = 480;			// height of game in pixels
+const UINT GAME_WIDTH = 1152;			// width of game in pixels
+const UINT GAME_HEIGHT = 720;			// height of game in pixels
 
 // game
 const double PI = 3.14159265;
@@ -59,7 +59,7 @@ const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
 
 
 // States
-enum GameStates {mainMenu, intro1, level1, intro2, level2, gameOver};
+enum GameStates {MAIN_MENU, INTRO1, LEVEL1, INTRO2, LEVEL2, GAME_OVER};
 
 
 

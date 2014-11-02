@@ -11,12 +11,16 @@
 #include "textDX.h"
 #include "constants.h"
 #include "entity.h"
+#include "menu.h"
 
 class NinjaGhost : public Game
 {
 private:
 	// game items
 	// game variables
+
+	//MENU STUFF
+	Menu *mainMenu;
 
 	//STATE STUFF
 	GameStates gameState;

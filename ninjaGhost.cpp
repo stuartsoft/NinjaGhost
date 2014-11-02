@@ -29,8 +29,14 @@ void NinjaGhost::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd);
 
+
+	// menu init
+	mainMenu = new Menu();
+	mainMenu->initialize(graphics, input);
+
+	// state init
 	timeInState = 0;
-	gameState = mainMenu;
+	gameState = MAIN_MENU;
 
 	return;
 }
@@ -51,6 +57,11 @@ void NinjaGhost::reset()
 void NinjaGhost::gameStateUpdate()
 {
 	timeInState += frameTime;
+	if(gameState == MAIN_MENU && input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 0)
+	{
+		gameState = INTRO1;
+		timeInState = 0;
+	}
 }
 //=============================================================================
 // move all game items
@@ -58,6 +69,16 @@ void NinjaGhost::gameStateUpdate()
 //=============================================================================
 void NinjaGhost::update()
 {
+	gameStateUpdate();
+	
+	switch(gameState)
+	{
+	case MAIN_MENU:
+		mainMenu->update();
+		break;
+	
+	}
+	
 
 }
 
@@ -67,6 +88,15 @@ void NinjaGhost::update()
 void NinjaGhost::render()
 {
 	graphics->spriteBegin();
+
+	switch(gameState)
+	{
+	case MAIN_MENU:
+		mainMenu->displayMenu();
+		break;
+	
+	}
+	
 	graphics->spriteEnd();
 }
 
