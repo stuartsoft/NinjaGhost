@@ -8,6 +8,10 @@ Katana::Katana() : Entity()
 	spriteData.rect.bottom = katanaNS::HEIGHT;    // rectangle to select parts of an image
 	spriteData.rect.right = katanaNS::WIDTH;
 	spriteData.scale = katanaNS::SCALE;
+
+	spriteData.x = 0;
+	spriteData.y = 0;
+
 	velocity.x = 0;                             // velocity X
 	velocity.y = 0;                             // velocity Y
 	radius = (katanaNS::WIDTH + katanaNS::HEIGHT)/4.0;

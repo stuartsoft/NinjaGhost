@@ -24,6 +24,12 @@ private:
 	Player player;
 	TextureManager PlayerTextureManager;
 
+	TextureManager KatanaTM;
+	TextureManager ShurikenTM;
+
+	Katana katana;
+	Shuriken shuriken[MAX_SHURIKEN];
+
 	//MENU STUFF
 	Menu *mainMenu;
 

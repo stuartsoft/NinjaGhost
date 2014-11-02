@@ -30,11 +30,26 @@ void NinjaGhost::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd);
 
-	if(!PlayerTextureManager.initialize(graphics, "images\\test.png")){
+	if(!PlayerTextureManager.initialize(graphics, "images\\test.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
+	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 0, &PlayerTextureManager))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
+	
+	
+	if(!KatanaTM.initialize(graphics, "images\\test.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana texture"));
+	
+	if(!katana.initialize(this, katanaNS::WIDTH, katanaNS::HEIGHT, 0, &KatanaTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana"));
+
+	if(!ShurikenTM.initialize(graphics, "images\\test.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken texture"));
+
+	for(int i=0; i<MAX_SHURIKEN; i++)
+	{
+		if(!shuriken[i].initialize(this, shurikenNS::WIDTH, shurikenNS::HEIGHT, 0, &ShurikenTM))
+			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken"));
 	}
-	if (!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 0, &PlayerTextureManager))
-		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 
 	// menu init
 	mainMenu = new Menu();
@@ -123,6 +138,8 @@ void NinjaGhost::render()
 //=============================================================================
 void NinjaGhost::releaseAll()
 {
+	KatanaTM.onLostDevice();
+	ShurikenTM.onLostDevice();
 	PlayerTextureManager.onLostDevice();
 	Game::releaseAll();
 	return;
@@ -134,6 +151,8 @@ void NinjaGhost::releaseAll()
 //=============================================================================
 void NinjaGhost::resetAll()
 {
+	KatanaTM.onResetDevice();
+	ShurikenTM.onResetDevice();
 	PlayerTextureManager.onResetDevice();
 	Game::resetAll();
 	return;
