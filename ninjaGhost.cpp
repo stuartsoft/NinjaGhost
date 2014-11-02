@@ -10,6 +10,7 @@
 //=============================================================================
 NinjaGhost::NinjaGhost()
 {
+
 	
 }
 
@@ -28,6 +29,13 @@ NinjaGhost::~NinjaGhost()
 void NinjaGhost::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd);
+
+	if(!PlayerTextureManager.initialize(graphics, "images\\test.png")){
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
+	}
+	if (!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 0, &PlayerTextureManager))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
+
 	return;
 }
 
@@ -46,7 +54,7 @@ void NinjaGhost::reset()
 //=============================================================================
 void NinjaGhost::update()
 {
-
+	player.update(frameTime);
 }
 
 //=============================================================================
@@ -55,6 +63,7 @@ void NinjaGhost::update()
 void NinjaGhost::render()
 {
 	graphics->spriteBegin();
+	player.draw();
 	graphics->spriteEnd();
 }
 
@@ -64,6 +73,7 @@ void NinjaGhost::render()
 //=============================================================================
 void NinjaGhost::releaseAll()
 {
+	PlayerTextureManager.onLostDevice();
 	Game::releaseAll();
 	return;
 }
@@ -74,6 +84,7 @@ void NinjaGhost::releaseAll()
 //=============================================================================
 void NinjaGhost::resetAll()
 {
+	PlayerTextureManager.onResetDevice();
 	Game::resetAll();
 	return;
 }

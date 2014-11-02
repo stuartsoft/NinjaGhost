@@ -11,12 +11,15 @@
 #include "textDX.h"
 #include "constants.h"
 #include "entity.h"
+#include "Player.h"
 
 class NinjaGhost : public Game
 {
 private:
 	// game items
 	// game variables
+	Player player;
+	TextureManager PlayerTextureManager;
 
 public:
 	NinjaGhost();
