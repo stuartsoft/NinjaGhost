@@ -13,6 +13,8 @@
 #include "entity.h"
 #include "Player.h"
 #include "menu.h"
+#include "katana.h"
+#include "shuriken.h"
 
 class NinjaGhost : public Game
 {

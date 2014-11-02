@@ -35,6 +35,7 @@ void NinjaGhost::initialize(HWND hwnd)
 	}
 	if (!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 0, &PlayerTextureManager))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
+
 	// menu init
 	mainMenu = new Menu();
 	mainMenu->initialize(graphics, input);
@@ -67,6 +68,11 @@ void NinjaGhost::gameStateUpdate()
 		gameState = INTRO1;
 		timeInState = 0;
 	}
+	if(gameState == INTRO1 && timeInState > 3.0)
+	{
+		gameState = LEVEL1;
+		timeInState = 0;
+	}
 }
 //=============================================================================
 // move all game items
@@ -74,7 +80,7 @@ void NinjaGhost::gameStateUpdate()
 //=============================================================================
 void NinjaGhost::update()
 {
-	player.update(frameTime);
+	
 	gameStateUpdate();
 	
 	switch(gameState)
@@ -82,7 +88,8 @@ void NinjaGhost::update()
 	case MAIN_MENU:
 		mainMenu->update();
 		break;
-	
+	case LEVEL1:
+		player.update(frameTime);
 	}
 	
 
@@ -94,12 +101,15 @@ void NinjaGhost::update()
 void NinjaGhost::render()
 {
 	graphics->spriteBegin();
-	player.draw();
+	
 
 	switch(gameState)
 	{
 	case MAIN_MENU:
 		mainMenu->displayMenu();
+		break;
+	case LEVEL1:
+		player.draw();
 		break;
 	
 	}

@@ -97,8 +97,10 @@
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="katana.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="shuriken.cpp" />
     <ClCompile Include="textDX.cpp" />
     <ClCompile Include="ninjaGhost.cpp" />
     <ClCompile Include="textureManager.cpp" />
@@ -113,8 +115,10 @@
     <ClInclude Include="graphics.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="katana.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="shuriken.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="ninjaGhost.h" />
     <ClInclude Include="textureManager.h" />
