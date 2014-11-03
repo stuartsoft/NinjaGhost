@@ -61,7 +61,8 @@ const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
 // States
 enum GameStates {MAIN_MENU, INTRO1, LEVEL1, INTRO2, LEVEL2, GAME_OVER};
 
-
+// Pattern Step Actions
+enum PATTERN_STEP_ACTION {NONE, LEFT, RIGHT};
 
 
 #endif

@@ -97,11 +97,19 @@ void NinjaGhost::update()
 {
 	
 	gameStateUpdate();
-	
+	if(input->isKeyDown(ESC_KEY))
+	{
+		exitGame();
+	}
+
 	switch(gameState)
 	{
 	case MAIN_MENU:
 		mainMenu->update();
+		if(input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 3)
+		{
+			exitGame();
+		}
 		break;
 	case LEVEL1:
 		player.update(frameTime);
