@@ -50,7 +50,8 @@ void NinjaGhost::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken"));
 	}
 
-	
+	player.setScale(0.5);
+
 	// splash screen init
 	if(!MainMenuSplashTM.initialize(graphics, MAIN_MENU_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init menu splash texture"));
