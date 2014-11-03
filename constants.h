@@ -58,10 +58,16 @@ const UCHAR ALT_KEY      = VK_MENU;     // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
 
 
+// splash screen images
+const char MAIN_MENU_IMAGE[] = "images\\menu.jpg";
+const char SPLASH1_IMAGE[] = "images\\menu.jpg";
+const char SPLASH2_IMAGE[] = "images\\menu.jpg";
+
 // States
 enum GameStates {MAIN_MENU, INTRO1, LEVEL1, INTRO2, LEVEL2, GAME_OVER};
 
-
+// Pattern Step Actions
+enum PATTERN_STEP_ACTION {NONE, LEFT, RIGHT};
 
 
 #endif

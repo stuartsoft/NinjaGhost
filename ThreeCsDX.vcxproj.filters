@@ -57,6 +57,9 @@
     <ClCompile Include="shuriken.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="patternStep.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.h">
@@ -102,6 +105,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shuriken.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="patternStep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

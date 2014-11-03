@@ -99,6 +99,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="katana.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="patternStep.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="shuriken.cpp" />
     <ClCompile Include="textDX.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="katana.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="patternStep.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="shuriken.h" />
     <ClInclude Include="textDX.h" />
