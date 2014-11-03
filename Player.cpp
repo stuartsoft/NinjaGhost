@@ -32,10 +32,10 @@ void Player::update(float frameTime){
 	else if (input->isKeyDown(0x44))//right
 		inputDir.x = 1;
 
-	if (input->isKeyDown(VK_SPACE) && velocity.y ==0)//up
+	if (input->isKeyDown(VK_SPACE) && velocity.y ==0 && deltaV.y == 0)//up
 		inputDir.y = -1;
 
-	D3DXVec2Normalize(&inputDir,&inputDir);
+	//D3DXVec2Normalize(&inputDir,&inputDir);
 	inputDir.x *= 5;
 	inputDir.y *= 5;
 
