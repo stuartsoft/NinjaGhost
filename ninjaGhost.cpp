@@ -38,18 +38,41 @@ void NinjaGhost::initialize(HWND hwnd)
 	
 	if(!KatanaTM.initialize(graphics, "images\\test.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana texture"));
-	
 	if(!katana.initialize(this, katanaNS::WIDTH, katanaNS::HEIGHT, 0, &KatanaTM))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana"));
 
+
 	if(!ShurikenTM.initialize(graphics, "images\\test.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken texture"));
-
 	for(int i=0; i<MAX_SHURIKEN; i++)
 	{
 		if(!shuriken[i].initialize(this, shurikenNS::WIDTH, shurikenNS::HEIGHT, 0, &ShurikenTM))
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken"));
 	}
+
+	
+	// splash screen init
+	if(!MainMenuSplashTM.initialize(graphics, MAIN_MENU_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init menu splash texture"));
+	if(!MainMenuSplash.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &MainMenuSplashTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init menu splash image"));
+	MainMenuSplash.setX(0);
+	MainMenuSplash.setY(0);
+
+	if(!Level1SplashTM.initialize(graphics, SPLASH1_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init level1 splash texture"));
+	if(!Level1Splash.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &Level1SplashTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init level1 splash image"));
+	Level1Splash.setX(0);
+	Level1Splash.setY(0);
+
+	if(!Level2SplashTM.initialize(graphics, SPLASH2_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init level2 splash texture"));
+	if(!Level2Splash.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &Level2SplashTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init level2 splash image"));
+	Level2Splash.setX(0);
+	Level2Splash.setY(0);
+
 
 	// menu init
 	mainMenu = new Menu();
@@ -129,7 +152,11 @@ void NinjaGhost::render()
 	switch(gameState)
 	{
 	case MAIN_MENU:
+		MainMenuSplash.draw();
 		mainMenu->displayMenu();
+		break;
+	case INTRO1:
+		Level1Splash.draw();
 		break;
 	case LEVEL1:
 		player.draw();
@@ -149,6 +176,9 @@ void NinjaGhost::releaseAll()
 	KatanaTM.onLostDevice();
 	ShurikenTM.onLostDevice();
 	PlayerTextureManager.onLostDevice();
+	MainMenuSplashTM.onLostDevice();
+	Level1SplashTM.onLostDevice();
+	Level2SplashTM.onLostDevice();
 	Game::releaseAll();
 	return;
 }
@@ -162,6 +192,9 @@ void NinjaGhost::resetAll()
 	KatanaTM.onResetDevice();
 	ShurikenTM.onResetDevice();
 	PlayerTextureManager.onResetDevice();
+	MainMenuSplashTM.onResetDevice();
+	Level1SplashTM.onResetDevice();
+	Level2SplashTM.onResetDevice();
 	Game::resetAll();
 	return;
 }

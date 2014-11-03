@@ -14,7 +14,7 @@ void Menu::initialize(Graphics *g, Input *i)
 	menuItem2 = "Options";
 	menuItem3 = "Cheat Codes";
 	menuItem4 = "Exit";
-	highlightColor = graphicsNS::RED;
+	highlightColor = graphicsNS::ORANGE;
 	normalColor = graphicsNS::WHITE;
 	menuAnchor = D3DXVECTOR2(GAME_WIDTH/10,GAME_HEIGHT/6);
 	input = i;
@@ -25,11 +25,11 @@ void Menu::initialize(Graphics *g, Input *i)
 	menuItemFont = new TextDX();
 	menuHeadingFont = new TextDX();
 	menuItemFontHighlight = new TextDX();
-	if(menuItemFont->initialize(graphics, 20, false, false, "Forte") == false)
+	if(menuItemFont->initialize(graphics, 32, false, false, "Forte") == false)
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menuItem font"));
-	if(menuItemFontHighlight->initialize(graphics, 22, false, false, "Forte") == false)
+	if(menuItemFontHighlight->initialize(graphics, 32, false, false, "Forte") == false)
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menuItem font"));
-	if(menuHeadingFont->initialize(graphics, 56, false, true, "Forte") == false)
+	if(menuHeadingFont->initialize(graphics, 72, false, true, "Forte") == false)
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing menuHeading font"));
 	menuHeadingFont->setFontColor(normalColor);
 	menuItemFont->setFontColor(normalColor);

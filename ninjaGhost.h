@@ -26,14 +26,22 @@ private:
 
 	TextureManager KatanaTM;
 	TextureManager ShurikenTM;
+	
 
 	Katana katana;
 	Shuriken shuriken[MAX_SHURIKEN];
 
-	//MENU STUFF
+	// MENU/SPLASH STUFF
 	Menu *mainMenu;
 
-	//STATE STUFF
+	TextureManager MainMenuSplashTM;
+	Image MainMenuSplash;
+	TextureManager Level1SplashTM;
+	Image Level1Splash;
+	TextureManager Level2SplashTM;
+	Image Level2Splash;
+
+	// STATE STUFF
 	GameStates gameState;
 	float timeInState;
 	void gameStateUpdate();
