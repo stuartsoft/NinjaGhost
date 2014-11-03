@@ -40,7 +40,7 @@ private:
 	Image Level1Splash;
 	TextureManager Level2SplashTM;
 	Image Level2Splash;
-
+	
 	// STATE STUFF
 	GameStates gameState;
 	float timeInState;

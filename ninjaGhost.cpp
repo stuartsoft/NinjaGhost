@@ -107,7 +107,7 @@ void NinjaGhost::gameStateUpdate()
 		gameState = INTRO1;
 		timeInState = 0;
 	}
-	if(gameState == INTRO1 && timeInState > 3.0)
+	if(gameState == INTRO1 && timeInState > 1.0)
 	{
 		gameState = LEVEL1;
 		timeInState = 0;
