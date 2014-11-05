@@ -36,11 +36,12 @@ void NinjaGhost::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	
 	
-	if(!KatanaTM.initialize(graphics, "images\\test.png"))
+	if(!KatanaTM.initialize(graphics, KATANA_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana texture"));
 	if(!katana.initialize(this, katanaNS::WIDTH, katanaNS::HEIGHT, 0, &KatanaTM))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana"));
-
+	katana.setActive(false);
+	katana.setPlayer(&player);
 
 	if(!ShurikenTM.initialize(graphics, "images\\test.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken texture"));
@@ -137,6 +138,7 @@ void NinjaGhost::update()
 		break;
 	case LEVEL1:
 		player.update(frameTime);
+		katana.update(frameTime);
 	}
 	
 
@@ -161,6 +163,10 @@ void NinjaGhost::render()
 		break;
 	case LEVEL1:
 		player.draw();
+		if(katana.getActive())
+		{
+			katana.draw();
+		}
 		break;
 	
 	}

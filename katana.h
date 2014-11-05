@@ -4,19 +4,20 @@
 
 #include "entity.h"
 #include "constants.h"
+#include "Player.h"
 
 namespace katanaNS
 {
-	const int WIDTH = 32;                   // image width
-	const int HEIGHT = 32;                  // image height
-	const float ROTATION_RATE = 10.0;  // radians per second
+	const int WIDTH = 147;                   // image width
+	const int HEIGHT = 8;                  // image height
+	const float ROTATION_RATE = 360.0;  // degrees per second
 	const float SPEED = 300;                // 10 pixels per second
 	const float MASS = 300.0f;              // mass
-	const float SCALE = 0.8;
+	const float SCALE = 4.0;
 	
 	const int   TEXTURE_COLS = 1;           // texture has 1 columns
-	const int   POWER_START_FRAME = 0;      // sword starts at frame 0
-	const int   POWER_END_FRAME = 0;         // sword animation frames 0
+	const int   KATANA_START_FRAME = 0;      // sword starts at frame 0
+	const int   KATANA_END_FRAME = 0;         // sword animation frames 0
 }
 
 class Katana : public Entity
@@ -27,8 +28,10 @@ public:
 
     // inherited member functions
     void update(float frameTime);
+	void setPlayer(Player* p){player = p;}
 
 private:
+	Player* player;
 };
 
 #endif

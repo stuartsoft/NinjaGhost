@@ -46,6 +46,8 @@ private:
 	float timeInState;
 	void gameStateUpdate();
 
+
+
 public:
 	NinjaGhost();
 	virtual ~NinjaGhost();
