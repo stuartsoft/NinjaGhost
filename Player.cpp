@@ -40,7 +40,7 @@ void Player::update(float frameTime){
 	inputDir.y *= 5;
 
 	if (inputDir.y !=0)
-		velocity.y = inputDir.y*250;
+		velocity.y = inputDir.y*215;
 
 	//speed cap
 	if(velocity.x> Playerns::MAX_SPEED_X)
@@ -65,7 +65,7 @@ void Player::update(float frameTime){
 		deltaV.x+=2.5;
 
 	//acceleration of gravity
-	deltaV.y = 9.8;
+	deltaV.y = 2000*(frameTime);
 	
 
 	if (spriteData.x + 2*radius*getScale()< 0)	//left edge

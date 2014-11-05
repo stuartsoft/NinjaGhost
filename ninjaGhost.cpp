@@ -30,11 +30,14 @@ void NinjaGhost::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd);
 
-	if(!PlayerTextureManager.initialize(graphics, "images\\test.png"))
+	if(!PlayerTextureManager.initialize(graphics, "images\\player.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
-	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 0, &PlayerTextureManager))
+	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 2, &PlayerTextureManager))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	
+	player.setFrames(0,3);
+	player.setCurrentFrame(0);
+	player.setFrameDelay(0.25);
 	
 	if(!KatanaTM.initialize(graphics, KATANA_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana texture"));
@@ -51,7 +54,7 @@ void NinjaGhost::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken"));
 	}
 
-	player.setScale(0.5);
+	player.setScale(2.0);
 
 	// splash screen init
 	if(!MainMenuSplashTM.initialize(graphics, MAIN_MENU_IMAGE))
