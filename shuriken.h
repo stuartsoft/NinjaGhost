@@ -7,16 +7,16 @@
 
 namespace shurikenNS
 {
-	const int WIDTH = 32;                   // image width
-	const int HEIGHT = 32;                  // image height
-	const float ROTATION_RATE = 10.0;  // radians per second
-	const float SPEED = 300;                // 10 pixels per second
+	const int WIDTH = 54;                   // image width
+	const int HEIGHT = 54;                  // image height
+	const float ROTATION_RATE = 720.0;  // radians per second
+	const float SPEED = 500;                // 10 pixels per second
 	const float MASS = 300.0f;              // mass
 	const float SCALE = 0.8;
 	
 	const int   TEXTURE_COLS = 1;           // texture has 1 columns
-	const int   POWER_START_FRAME = 0;      // starts at frame 0
-	const int   POWER_END_FRAME = 0;
+	const int   SHURIKEN_START_FRAME = 0;      // starts at frame 0
+	const int   SHURIKEN_END_FRAME = 0;
 }
 
 class Shuriken : public Entity
