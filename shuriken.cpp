@@ -27,6 +27,8 @@ void Shuriken::update(float frameTime)
 
 	spriteData.x += frameTime * velocity.x;
     spriteData.y += frameTime * velocity.y;
+	
+	deltaV.y = 1000*(frameTime);
 	setDegrees(getDegrees() + shurikenNS::ROTATION_RATE*frameTime);
 
 }

@@ -22,6 +22,10 @@ void Player::draw()
 	Image::draw();              // draw Player
 }
 
+direction Player::FacingDir(){
+	return playerdir;
+}
+
 void Player::update(float frameTime){
 	Entity::update(frameTime);
 	spriteData.x += frameTime * velocity.x;         // move ship along X 
@@ -31,13 +35,20 @@ void Player::update(float frameTime){
 	if (input->isKeyDown(0x41)){//left
 		inputDir.x = -1;
 		setFrames(4,7);
-		playerdir = left;
+		if(playerdir!=left){
+			playerdir = left;
+			setCurrentFrame(4);
+		}
 		//setCurrentFrame(4);
 	}
 	else if (input->isKeyDown(0x44)){//right
 		inputDir.x = 1;
 		setFrames(0,3);
-		playerdir = right;
+		if(playerdir != right){
+			playerdir = right;
+			setCurrentFrame(0);
+		}
+
 		//setCurrentFrame(0);
 	}
 

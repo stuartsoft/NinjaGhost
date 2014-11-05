@@ -22,6 +22,7 @@ private:
 	direction playerdir;
 public:
 	Player();
+	direction FacingDir();
 	void Player::draw();
 	void Player::update(float frameTime);
 };
