@@ -46,7 +46,7 @@ void NinjaGhost::initialize(HWND hwnd)
 	katana.setActive(false);
 	katana.setPlayer(&player);
 
-	if(!ShurikenTM.initialize(graphics, "images\\test.png"))
+	if(!ShurikenTM.initialize(graphics, SHURIKEN_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken texture"));
 	for(int i=0; i<MAX_SHURIKEN; i++)
 	{
@@ -86,6 +86,9 @@ void NinjaGhost::initialize(HWND hwnd)
 	// state init
 	timeInState = 0;
 	gameState = MAIN_MENU;
+
+	//var init
+	timeSinceThrow = 0;
 
 	return;
 }
@@ -142,6 +145,24 @@ void NinjaGhost::update()
 	case LEVEL1:
 		player.update(frameTime);
 		katana.update(frameTime);
+		timeSinceThrow += frameTime;
+		if(timeSinceThrow >= 100)
+			timeSinceThrow = 30;
+		if(timeSinceThrow >= THROW_COOLDOWN && input->isKeyDown(THROW_KEY))
+		{
+			VECTOR2 pos = VECTOR2(player.getCenterX(),player.getCenterY());
+			VECTOR2 dir = VECTOR2(input->getMouseX(),input->getMouseY()) - pos;
+			D3DXVec2Normalize(&dir,&dir);
+			spawnShuriken(pos, dir*shurikenNS::SPEED);
+			timeSinceThrow = 0;
+		}
+		for(int i=0; i<MAX_SHURIKEN; i++)
+		{
+			if(shuriken[i].getActive())
+			{
+				shuriken[i].update(frameTime);
+			}
+		}
 	}
 	
 
@@ -170,12 +191,44 @@ void NinjaGhost::render()
 		{
 			katana.draw();
 		}
+		for(int i=0; i<MAX_SHURIKEN; i++)
+		{
+			if(shuriken[i].getActive())
+			{
+				shuriken[i].draw();
+			}
+		}
 		break;
 	
 	}
 	
 	graphics->spriteEnd();
 }
+
+
+//
+// grab a throwing star and activate it at given position
+//
+void NinjaGhost::spawnShuriken(VECTOR2 pos, VECTOR2 vel)
+{
+	Shuriken* first = nullptr;
+	for(int i=0; i<MAX_SHURIKEN; i++)
+	{
+		if(!(shuriken[i].getActive()))
+		{
+			first = &shuriken[i];
+			break;
+		}
+	}
+	if(first != nullptr)
+	{
+		first->setActive(true);
+		first->setVelocity(vel);
+		first->setX(pos.x);
+		first->setY(pos.y);
+	}
+}
+
 
 //=============================================================================
 // The graphics device was lost.

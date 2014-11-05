@@ -13,7 +13,7 @@ namespace katanaNS
 	const float ROTATION_RATE = 360.0;  // degrees per second
 	const float SPEED = 300;                // 10 pixels per second
 	const float MASS = 300.0f;              // mass
-	const float SCALE = 4.0;
+	const float SCALE = 2.0;
 	
 	const int   TEXTURE_COLS = 1;           // texture has 1 columns
 	const int   KATANA_START_FRAME = 0;      // sword starts at frame 0

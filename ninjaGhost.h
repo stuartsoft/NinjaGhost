@@ -20,16 +20,18 @@ class NinjaGhost : public Game
 {
 private:
 	// game items
-	// game variables
 	Player player;
 	TextureManager PlayerTextureManager;
 
 	TextureManager KatanaTM;
 	TextureManager ShurikenTM;
 	
-
 	Katana katana;
 	Shuriken shuriken[MAX_SHURIKEN];
+	
+	// game variables
+	float timeSinceThrow;
+
 
 	// MENU/SPLASH STUFF
 	Menu *mainMenu;
@@ -46,7 +48,8 @@ private:
 	float timeInState;
 	void gameStateUpdate();
 
-
+	// functs
+	void spawnShuriken(VECTOR2 pos, VECTOR2 vel);
 
 public:
 	NinjaGhost();

@@ -43,6 +43,9 @@ const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calcul
 
 const int MAX_SHURIKEN = 10;
 
+const float THROW_COOLDOWN = 1.5;
+
+
 // audio files
 const char WAVE_BANK[] = "";
 const char SOUND_BANK[] = "";
@@ -56,11 +59,13 @@ const UCHAR CONSOLE_KEY  = VK_OEM_3;    // `~ key for U.S.
 const UCHAR ESC_KEY      = VK_ESCAPE;   // escape key
 const UCHAR ALT_KEY      = VK_MENU;     // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
-const UCHAR ATTACK_KEY	 = 0x45;   // shift key
+const UCHAR ATTACK_KEY	 = 0x45;   // e key
+const UCHAR THROW_KEY	 = 0x51;   // q key
 
 
 // texture images
-const char KATANA_IMAGE[] = "images\\katana.png"; 
+const char KATANA_IMAGE[] = "images\\katana.png";
+const char SHURIKEN_IMAGE[] = "images\\shuriken.png";
 
 
 // splash screen images
