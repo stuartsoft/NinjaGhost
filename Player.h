@@ -15,7 +15,11 @@ namespace Playerns{
 	const int MAX_SPEED_Y = 1000;
 }
 
+enum direction {left , right};
+
 class Player: public Entity{
+private:
+	direction playerdir;
 public:
 	Player();
 	void Player::draw();

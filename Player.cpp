@@ -14,6 +14,7 @@ Player::Player(){
 	collisionType = entityNS::CIRCLE;
 	setHealth(Playerns::MAX_HEALTH);
 	health = Playerns::MAX_HEALTH;
+	playerdir = right;
 }
 
 void Player::draw()
@@ -27,12 +28,20 @@ void Player::update(float frameTime){
 	spriteData.y += frameTime * velocity.y;         // move ship along Y
 
 	D3DXVECTOR2 inputDir(0,0);
-	if (input->isKeyDown(0x41))//left
+	if (input->isKeyDown(0x41)){//left
 		inputDir.x = -1;
-	else if (input->isKeyDown(0x44))//right
+		setFrames(4,7);
+		playerdir = left;
+		//setCurrentFrame(4);
+	}
+	else if (input->isKeyDown(0x44)){//right
 		inputDir.x = 1;
+		setFrames(0,3);
+		playerdir = right;
+		//setCurrentFrame(0);
+	}
 
-	if (input->isKeyDown(VK_SPACE) && velocity.y ==0 && deltaV.y == 0)//up
+	if (input->isKeyDown(VK_SPACE) && spriteData.y == GAME_HEIGHT- getHeight()*getScale())//up
 		inputDir.y = -1;
 
 	//D3DXVec2Normalize(&inputDir,&inputDir);
@@ -47,10 +56,6 @@ void Player::update(float frameTime){
 		velocity.x = Playerns::MAX_SPEED_X;
 	else if (velocity.x < -Playerns::MAX_SPEED_X)
 		velocity.x = -Playerns::MAX_SPEED_X;
-	//if (velocity.y>Playerns::MAX_SPEED_Y)
-	//	velocity.y = Playerns::MAX_SPEED_Y;
-	//else if (velocity.y <-Playerns::MAX_SPEED_Y)
-	//	velocity.y = -Playerns::MAX_SPEED_Y;
 
 	//x acceleration
 	if (inputDir.x!=0)
@@ -66,7 +71,6 @@ void Player::update(float frameTime){
 
 	//acceleration of gravity
 	deltaV.y = 2000*(frameTime);
-	
 
 	if (spriteData.x + 2*radius*getScale()< 0)	//left edge
 		spriteData.x = GAME_WIDTH;
