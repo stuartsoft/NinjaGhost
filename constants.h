@@ -59,8 +59,8 @@ const UCHAR CONSOLE_KEY  = VK_OEM_3;    // `~ key for U.S.
 const UCHAR ESC_KEY      = VK_ESCAPE;   // escape key
 const UCHAR ALT_KEY      = VK_MENU;     // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
-const UCHAR ATTACK_KEY	 = 0x45;   // e key
-const UCHAR THROW_KEY	 = 0x51;   // q key
+const UCHAR ATTACK_KEY	 = VK_LBUTTON;   // left button
+const UCHAR THROW_KEY	 = VK_RBUTTON;   // right button
 
 
 // texture images

@@ -23,6 +23,9 @@ Katana::Katana() : Entity()
 
 	collisionType = entityNS::ROTATED_BOX;
 	active = false;
+
+	player = nullptr;
+	swingAngle = 0;
 }
 
 
@@ -30,23 +33,37 @@ void Katana::update(float frameTime)
 {
 	Entity::update(frameTime);
 
-	if(!active && input->isKeyDown(ATTACK_KEY))
+	if(!active && input->getMouseLButton())
 	{
 		setActive(true);
-		setDegrees(-75);
+		swingAngle = katanaNS::SWING_START;
+		setDegrees(swingAngle);
 	}
 	if(active)
 	{
-		setX(player->getCenterX()-katanaNS::WIDTH*katanaNS::SCALE/2); //+Playerns::WIDTH/2);
-		setY(player->getCenterY());
-		setDegrees(getDegrees() + frameTime*katanaNS::ROTATION_RATE);
-		if(getDegrees() >= 75)
+		swingAngle += frameTime*katanaNS::ROTATION_RATE;
+		if(player->FacingDir() == right)
 		{
-			setActive(false);
+			setCurrentFrame(0);
+			setX(player->getCenterX()+Playerns::WIDTH/2-katanaNS::WIDTH*katanaNS::SCALE/2); //+Playerns::WIDTH/2);
+			setY(player->getCenterY());
+			setDegrees(swingAngle);
+			if(getDegrees() >= katanaNS::SWING_END)
+			{
+				setActive(false);
+			}
+		}
+		if(player->FacingDir() == left)
+		{
+			setCurrentFrame(1);
+			setX(player->getCenterX()-Playerns::WIDTH/2-katanaNS::WIDTH*katanaNS::SCALE/2); //+Playerns::WIDTH/2);
+			setY(player->getCenterY());
+			setDegrees(-swingAngle);
+			if(getDegrees() <= -katanaNS::SWING_END)
+			{
+				setActive(false);
+			}
 		}
 	}
-
-//	spriteData.x += frameTime * velocity.x;
-//  spriteData.y += frameTime * velocity.y;
 	
 }

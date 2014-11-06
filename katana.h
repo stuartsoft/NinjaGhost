@@ -13,11 +13,14 @@ namespace katanaNS
 	const float ROTATION_RATE = 360.0;  // degrees per second
 	const float SPEED = 300;                // 10 pixels per second
 	const float MASS = 300.0f;              // mass
-	const float SCALE = 2.0;
+	const float SCALE = 1.4;
 	
+	const float SWING_START = -80;
+	const float SWING_END = 30;
+
 	const int   TEXTURE_COLS = 1;           // texture has 1 columns
-	const int   KATANA_START_FRAME = 0;      // sword starts at frame 0
-	const int   KATANA_END_FRAME = 0;         // sword animation frames 0
+	const int   KATANA_RIGHT_FRAME = 0;      // sword starts at frame 0
+	const int   KATANA_LEFT_FRAME = 1;         // sword animation frames 0
 }
 
 class Katana : public Entity
@@ -32,6 +35,7 @@ public:
 
 private:
 	Player* player;
+	float swingAngle;
 };
 
 #endif

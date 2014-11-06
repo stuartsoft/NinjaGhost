@@ -104,8 +104,9 @@ void NinjaGhost::reset()
 
 
 
-
+//===============================
 // update game state information
+//===============================
 void NinjaGhost::gameStateUpdate()
 {
 	timeInState += frameTime;
@@ -148,12 +149,12 @@ void NinjaGhost::update()
 		timeSinceThrow += frameTime;
 		if(timeSinceThrow >= 100)
 			timeSinceThrow = 30;
-		if(timeSinceThrow >= THROW_COOLDOWN && input->isKeyDown(THROW_KEY))
+		if(timeSinceThrow >= THROW_COOLDOWN && input->getMouseRButton())
 		{
 			VECTOR2 pos = VECTOR2(player.getCenterX(),player.getCenterY());
 			VECTOR2 dir = VECTOR2(input->getMouseX(),input->getMouseY()) - pos;
-			D3DXVec2Normalize(&dir,&dir);
-			spawnShuriken(pos, dir*shurikenNS::SPEED);
+			dir *= shurikenNS::SPEED/GAME_WIDTH;
+			spawnShuriken(pos, dir);
 			timeSinceThrow = 0;
 		}
 		for(int i=0; i<MAX_SHURIKEN; i++)
