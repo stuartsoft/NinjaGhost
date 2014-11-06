@@ -20,7 +20,6 @@ Shuriken::Shuriken() : Entity()
 	active = false;
 }
 
-
 void Shuriken::update(float frameTime)
 {
 	Entity::update(frameTime);
