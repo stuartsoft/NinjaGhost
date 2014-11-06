@@ -69,7 +69,7 @@ const char SHURIKEN_IMAGE[] = "images\\shuriken.png";
 
 
 // splash screen images
-const char MAIN_MENU_IMAGE[] = "images\\menu.jpg";
+const char MAIN_MENU_IMAGE[] = "images\\menu.png";
 const char SPLASH1_IMAGE[] = "images\\menu.jpg";
 const char SPLASH2_IMAGE[] = "images\\menu.jpg";
 
