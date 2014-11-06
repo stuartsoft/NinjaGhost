@@ -30,7 +30,7 @@ void NinjaGhost::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd);
 
-	if(!PlayerTextureManager.initialize(graphics, "images\\player.png"))
+	if(!PlayerTextureManager.initialize(graphics, "images\\player2.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 2, &PlayerTextureManager))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
@@ -54,7 +54,7 @@ void NinjaGhost::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken"));
 	}
 
-	player.setScale(2.0);
+	//player.setScale(2.0);
 
 	// splash screen init
 	if(!MainMenuSplashTM.initialize(graphics, MAIN_MENU_IMAGE))
