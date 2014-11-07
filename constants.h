@@ -70,8 +70,8 @@ const char SHURIKEN_IMAGE[] = "images\\shuriken.png";
 
 // splash screen images
 const char MAIN_MENU_IMAGE[] = "images\\menu.png";
-const char SPLASH1_IMAGE[] = "images\\menu.jpg";
-const char SPLASH2_IMAGE[] = "images\\menu.jpg";
+const char SPLASH1_IMAGE[] = "images\\splash1.png";
+const char SPLASH2_IMAGE[] = "images\\splash1.png";
 
 // States
 enum GameStates {MAIN_MENU, INTRO1, LEVEL1, INTRO2, LEVEL2, GAME_OVER, GAME_COMPLETE};
