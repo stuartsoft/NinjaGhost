@@ -49,7 +49,7 @@ void Katana::update(float frameTime)
 		{
 			setCurrentFrame(0);
 			setX(player->getCenterX()-5+player->getScale()*Playerns::WIDTH/4-katanaNS::WIDTH*katanaNS::SCALE/2);
-			setY(player->getCenterY());
+			setY(player->getCenterY()+player->getfloatoffset());
 			setDegrees(swingAngle);
 			if(getDegrees() >= katanaNS::SWING_END)
 			{
@@ -60,7 +60,7 @@ void Katana::update(float frameTime)
 		{
 			setCurrentFrame(1);
 			setX(player->getCenterX()+5-player->getScale()*Playerns::WIDTH/4-katanaNS::WIDTH*katanaNS::SCALE/2);
-			setY(player->getCenterY());
+			setY(player->getCenterY()+player->getfloatoffset());
 			setDegrees(-swingAngle);
 			if(getDegrees() <= -katanaNS::SWING_END)
 			{
