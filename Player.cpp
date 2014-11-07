@@ -15,11 +15,17 @@ Player::Player(){
 	setHealth(Playerns::MAX_HEALTH);
 	health = Playerns::MAX_HEALTH;
 	playerdir = right;
+	floatoffset = 0.0;
+	floatdir = down;
 }
 
 void Player::draw()
 {
+	if (velocity.y <0.0001 && velocity.y > -0.0001)
+		spriteData.y+=floatoffset;
 	Image::draw();              // draw Player
+	if (velocity.y <0.0001 && velocity.y > -0.0001)
+		spriteData.y-=floatoffset;
 }
 
 direction Player::FacingDir(){
@@ -28,8 +34,8 @@ direction Player::FacingDir(){
 
 void Player::update(float frameTime){
 	Entity::update(frameTime);
-	spriteData.x += frameTime * velocity.x;         // move ship along X 
-	spriteData.y += frameTime * velocity.y;         // move ship along Y
+	spriteData.x += frameTime * velocity.x;							// move ship along X 
+	spriteData.y += frameTime * velocity.y;						   // move ship along Y
 
 	D3DXVECTOR2 inputDir(0,0);
 	if (input->isKeyDown(0x41)){//left
@@ -86,8 +92,23 @@ void Player::update(float frameTime){
 
 	//acceleration of gravity
 	deltaV.y = 2000*(frameTime);
+	//while falling and pressing space, replace gravitational acceleration with static velocity
+	if (velocity.y > 200  && input->isKeyDown(VK_SPACE)){
+		deltaV.y = 0.0;
+		velocity.y = 200;
+	}
 
-	if (spriteData.x + 2*radius*getScale()< 0)	//left edge
+	if (floatdir == up)
+		floatoffset -= 20*frameTime;
+	else
+		floatoffset += 20*frameTime;
+
+	if (floatoffset > 10 && floatdir ==down)
+		floatdir = up;
+	else if (floatoffset < -10 && floatdir == up)
+		floatdir = down;
+
+	if (spriteData.x + 2*radius*getScale() < 0)	//left edge
 		spriteData.x = GAME_WIDTH;
 	else if (spriteData.x > GAME_WIDTH)			//right edge
 		spriteData.x = -2*radius*getScale();

@@ -15,11 +15,13 @@ namespace Playerns{
 	const int MAX_SPEED_Y = 1000;
 }
 
-enum direction {left , right};
+enum direction {left , right, up, down};
 
 class Player: public Entity{
 private:
 	direction playerdir;
+	float floatoffset;
+	direction floatdir;
 public:
 	Player();
 	direction FacingDir();
