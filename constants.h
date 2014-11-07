@@ -74,7 +74,7 @@ const char SPLASH1_IMAGE[] = "images\\menu.jpg";
 const char SPLASH2_IMAGE[] = "images\\menu.jpg";
 
 // States
-enum GameStates {MAIN_MENU, INTRO1, LEVEL1, INTRO2, LEVEL2, GAME_OVER};
+enum GameStates {MAIN_MENU, INTRO1, LEVEL1, INTRO2, LEVEL2, GAME_OVER, GAME_COMPLETE};
 
 // Pattern Step Actions
 enum PATTERN_STEP_ACTION {NONE, LEFT, RIGHT};

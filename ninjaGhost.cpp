@@ -10,8 +10,10 @@
 //=============================================================================
 NinjaGhost::NinjaGhost()
 {
-
-	
+	gameOverFont1 = new TextDX;
+	gameOverFont2 = new TextDX;
+	gameCompleteFont1 = new TextDX;
+	gameCompleteFont2 = new TextDX;
 }
 
 //=============================================================================
@@ -20,6 +22,10 @@ NinjaGhost::NinjaGhost()
 NinjaGhost::~NinjaGhost()
 {
 	releaseAll();               // call deviceLost() for every graphics item
+	SAFE_DELETE(gameOverFont1);
+	SAFE_DELETE(gameOverFont2);
+	SAFE_DELETE(gameCompleteFont1);
+	SAFE_DELETE(gameCompleteFont2);
 }
 
 //=============================================================================
@@ -79,6 +85,21 @@ void NinjaGhost::initialize(HWND hwnd)
 	Level2Splash.setY(0);
 
 
+	if(gameOverFont1->initialize(graphics, 72, true, false, "Forte") == false)
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameover font"));
+	if(gameOverFont2->initialize(graphics, 36, false, false, "Forte") == false)
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameover font"));
+	gameOverFont1->setFontColor(graphicsNS::RED);
+	gameOverFont2->setFontColor(graphicsNS::RED);
+
+	if(gameCompleteFont1->initialize(graphics, 72, true, false, "Forte") == false)
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gamecomplete font"));
+	if(gameCompleteFont2->initialize(graphics, 36, false, false, "Forte") == false)
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gamecomplete font"));
+	gameCompleteFont1->setFontColor(graphicsNS::BLACK);
+	gameCompleteFont2->setFontColor(graphicsNS::BLACK);
+
+
 	// menu init
 	mainMenu = new Menu();
 	mainMenu->initialize(graphics, input);
@@ -110,14 +131,24 @@ void NinjaGhost::reset()
 void NinjaGhost::gameStateUpdate()
 {
 	timeInState += frameTime;
-	if(gameState == MAIN_MENU && input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 0)
+	if(gameState == MAIN_MENU && timeInState >= 1 && input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 0)
 	{
 		gameState = INTRO1;
 		timeInState = 0;
 	}
 	if(gameState == INTRO1 && timeInState > 1.0)
 	{
-		gameState = LEVEL1;
+		gameState = GAME_COMPLETE;
+		timeInState = 0;
+	}
+	if(gameState == GAME_OVER && input->isKeyDown(ENTER_KEY))
+	{
+		gameState = MAIN_MENU;
+		timeInState = 0;
+	}
+	if(gameState == GAME_COMPLETE && input->isKeyDown(ENTER_KEY))
+	{
+		gameState = MAIN_MENU;
 		timeInState = 0;
 	}
 }
@@ -200,16 +231,25 @@ void NinjaGhost::render()
 			}
 		}
 		break;
-	
+	case GAME_OVER:
+		graphics->setBackColor(graphicsNS::BLACK);
+		gameOverFont1->print("Game Over...",GAME_WIDTH/3,GAME_HEIGHT/3);
+		gameOverFont2->print("Press Enter to return to main menu",GAME_WIDTH/4,2*GAME_HEIGHT/3);
+		break;
+	case GAME_COMPLETE:
+		graphics->setBackColor(graphicsNS::WHITE);
+		gameCompleteFont1->print("Victory is yours!",GAME_WIDTH/3,GAME_HEIGHT/3);
+		gameCompleteFont2->print("Press Enter to return to main menu",GAME_WIDTH/3,2*GAME_HEIGHT/3);
+		break;
 	}
 	
 	graphics->spriteEnd();
 }
 
 
-//
-// grab a throwing star and activate it at given position
-//
+//==================================================================
+// grab a throwing star and activate it w/ given position & velocity
+//==================================================================
 void NinjaGhost::spawnShuriken(VECTOR2 pos, VECTOR2 vel)
 {
 	Shuriken* first = nullptr;
@@ -237,6 +277,10 @@ void NinjaGhost::spawnShuriken(VECTOR2 pos, VECTOR2 vel)
 //=============================================================================
 void NinjaGhost::releaseAll()
 {
+	gameOverFont1->onLostDevice();
+	gameOverFont2->onLostDevice();
+	gameCompleteFont1->onLostDevice();
+	gameCompleteFont2->onLostDevice();
 	KatanaTM.onLostDevice();
 	ShurikenTM.onLostDevice();
 	PlayerTextureManager.onLostDevice();
@@ -253,6 +297,10 @@ void NinjaGhost::releaseAll()
 //=============================================================================
 void NinjaGhost::resetAll()
 {
+	gameOverFont1->onResetDevice();
+	gameOverFont2->onResetDevice();
+	gameCompleteFont1->onResetDevice();
+	gameCompleteFont2->onResetDevice();
 	KatanaTM.onResetDevice();
 	ShurikenTM.onResetDevice();
 	PlayerTextureManager.onResetDevice();

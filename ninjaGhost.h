@@ -42,7 +42,13 @@ private:
 	Image Level1Splash;
 	TextureManager Level2SplashTM;
 	Image Level2Splash;
-	
+
+	TextDX *gameOverFont1;
+	TextDX *gameOverFont2;
+
+	TextDX *gameCompleteFont1;
+	TextDX *gameCompleteFont2;
+
 	// STATE STUFF
 	GameStates gameState;
 	float timeInState;
