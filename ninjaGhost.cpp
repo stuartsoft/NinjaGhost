@@ -29,7 +29,7 @@ NinjaGhost::~NinjaGhost()
 void NinjaGhost::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd);
-
+	graphics->setBackColor(0x000000);
 	if(!PlayerTextureManager.initialize(graphics, "images\\player2.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 2, &PlayerTextureManager))
