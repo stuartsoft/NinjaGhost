@@ -65,7 +65,7 @@ public:
 	void reset();
 	void update();
 	void ai() {};
-	void collisions() {};
+	void collisions();
 	void render();
 	void releaseAll();
 	void resetAll();

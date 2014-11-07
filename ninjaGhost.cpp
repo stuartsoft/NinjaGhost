@@ -124,7 +124,6 @@ void NinjaGhost::reset()
 }
 
 
-
 //===============================
 // update game state information
 //===============================
@@ -196,8 +195,6 @@ void NinjaGhost::update()
 			}
 		}
 	}
-	
-
 }
 
 //=============================================================================
@@ -246,6 +243,13 @@ void NinjaGhost::render()
 	graphics->spriteEnd();
 }
 
+//==================================================================
+// Handle collision between entities
+//==================================================================
+void NinjaGhost::collisions()
+{
+
+}
 
 //==================================================================
 // grab a throwing star and activate it w/ given position & velocity
