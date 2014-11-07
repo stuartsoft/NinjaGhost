@@ -22,10 +22,11 @@ class NinjaGhost : public Game
 private:
 	// game items
 	Player player;
+	Platform platform;
 	TextureManager PlayerTextureManager;
-
 	TextureManager KatanaTM;
 	TextureManager ShurikenTM;
+	TextureManager PlatformTM;
 	
 	Katana katana;
 	Shuriken shuriken[MAX_SHURIKEN];

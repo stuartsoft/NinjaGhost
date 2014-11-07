@@ -40,7 +40,12 @@ void NinjaGhost::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 2, &PlayerTextureManager))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
-	
+
+	if(!PlatformTM.initialize(graphics, "images\\platform.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform texture"));
+	if(!platform.initialize(this, Platformns::WIDTH, Platformns::HEIGHT, 0, &PlatformTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init player texture"));
+
 	player.setFrames(0,3);
 	player.setCurrentFrame(0);
 	player.setFrameDelay(0.25);
@@ -176,6 +181,7 @@ void NinjaGhost::update()
 	case LEVEL1:
 		player.update(frameTime);
 		katana.update(frameTime);
+		platform.update(frameTime);
 		timeSinceThrow += frameTime;
 		if(timeSinceThrow >= 100)
 			timeSinceThrow = 30;
@@ -215,6 +221,7 @@ void NinjaGhost::render()
 		Level1Splash.draw();
 		break;
 	case LEVEL1:
+		platform.draw();
 		player.draw();
 		if(katana.getActive())
 		{
