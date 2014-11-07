@@ -44,7 +44,6 @@ void Katana::update(float frameTime)
 	if(active)
 	{
 		swingAngle += frameTime*katanaNS::ROTATION_RATE;
-		
 		if(player->FacingDir() == right)
 		{
 			setCurrentFrame(0);
