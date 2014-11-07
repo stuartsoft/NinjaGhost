@@ -29,7 +29,7 @@
 //-----------------------------------------------
 // window
 const char CLASS_NAME[] = "ThreeCsDX";
-const char GAME_TITLE[] = "Three Cs DirectX";
+const char GAME_TITLE[] = "Ninja Ghost";
 const bool FULLSCREEN = false;          // windowed or fullscreen
 const UINT GAME_WIDTH = 1152;			// width of game in pixels
 const UINT GAME_HEIGHT = 720;			// height of game in pixels
@@ -43,8 +43,8 @@ const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calcul
 
 const int MAX_SHURIKEN = 10;
 
-const float THROW_COOLDOWN = 1.5;
-const float KATANA_COOLDOWN = 1.0;
+const float THROW_COOLDOWN = 1.2;
+const float KATANA_COOLDOWN = 0.7;
 
 // audio files
 const char WAVE_BANK[] = "";

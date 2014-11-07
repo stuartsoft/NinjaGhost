@@ -189,8 +189,10 @@ void NinjaGhost::update()
 		{
 			VECTOR2 pos = VECTOR2(player.getCenterX(),player.getCenterY());
 			VECTOR2 dir = VECTOR2(input->getMouseX(),input->getMouseY()) - pos;
-			dir *= shurikenNS::SPEED/GAME_WIDTH;
-			spawnShuriken(pos, dir);
+			VECTOR2 normdir;
+			D3DXVec2Normalize(&normdir,&dir);
+			normdir *= min(D3DXVec2Length(&dir)*shurikenNS::SPEED/GAME_WIDTH,shurikenNS::MAX_SPEED);
+			spawnShuriken(pos, normdir);
 			timeSinceThrow = 0;
 		}
 		for(int i=0; i<MAX_SHURIKEN; i++)
