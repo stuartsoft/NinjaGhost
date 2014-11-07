@@ -138,7 +138,7 @@ void NinjaGhost::gameStateUpdate()
 	}
 	if(gameState == INTRO1 && timeInState > 1.0)
 	{
-		gameState = GAME_COMPLETE;
+		gameState = LEVEL1;
 		timeInState = 0;
 	}
 	if(gameState == GAME_OVER && input->isKeyDown(ENTER_KEY))
