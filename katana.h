@@ -36,6 +36,7 @@ public:
 private:
 	Player* player;
 	float swingAngle;
+	float timeSinceSwing;
 };
 
 #endif

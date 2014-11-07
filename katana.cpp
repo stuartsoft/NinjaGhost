@@ -26,18 +26,20 @@ Katana::Katana() : Entity()
 
 	player = nullptr;
 	swingAngle = 0;
+	timeSinceSwing = 0;
 }
 
 
 void Katana::update(float frameTime)
 {
 	Entity::update(frameTime);
-
-	if(!active && input->getMouseLButton())
+	timeSinceSwing += frameTime;
+	if(!active && timeSinceSwing >= KATANA_COOLDOWN && input->getMouseLButton())
 	{
 		setActive(true);
 		swingAngle = katanaNS::SWING_START;
 		setDegrees(swingAngle);
+		timeSinceSwing = 0;
 	}
 	if(active)
 	{
