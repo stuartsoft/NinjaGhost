@@ -15,6 +15,7 @@
 #include "menu.h"
 #include "katana.h"
 #include "shuriken.h"
+#include "platform.h"
 
 class NinjaGhost : public Game
 {

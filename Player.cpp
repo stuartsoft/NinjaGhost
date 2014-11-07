@@ -32,6 +32,10 @@ direction Player::FacingDir(){
 	return playerdir;
 }
 
+float Player::getfloatoffset(){
+	return floatoffset;
+}
+
 void Player::update(float frameTime){
 	Entity::update(frameTime);
 	spriteData.x += frameTime * velocity.x;							// move ship along X 

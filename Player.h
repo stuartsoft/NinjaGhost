@@ -25,6 +25,7 @@ private:
 public:
 	Player();
 	direction FacingDir();
+	float getfloatoffset();
 	void Player::draw();
 	void Player::update(float frameTime);
 };
