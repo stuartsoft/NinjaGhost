@@ -45,7 +45,6 @@ void Player::update(float frameTime){
 	if (input->isKeyDown(0x41)){//left
 		inputDir.x = -1;
 		setFrames(4,7);
-		setFrameDelay(0.1);
 		if(playerdir!=left){
 			playerdir = left;
 			setCurrentFrame(4);
@@ -55,15 +54,11 @@ void Player::update(float frameTime){
 	else if (input->isKeyDown(0x44)){//right
 		inputDir.x = 1;
 		setFrames(0,3);
-		setFrameDelay(0.1);
 		if(playerdir != right){
 			playerdir = right;
 			setCurrentFrame(0);
 		}
 		//setCurrentFrame(0);
-	}
-	else{
-		setFrameDelay(0.25);
 	}
 
 	if (input->isKeyDown(VK_SPACE) && spriteData.y == GAME_HEIGHT- getHeight()*getScale())//up

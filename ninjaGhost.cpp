@@ -36,14 +36,14 @@ void NinjaGhost::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd);
 	graphics->setBackColor(0x000000);
-	if(!PlayerTextureManager.initialize(graphics, "images\\player2.png"))
+	if(!PlayerTextureManager.initialize(graphics, "images\\PlayerB.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 2, &PlayerTextureManager))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player"));
 
 	player.setFrames(0,3);
 	player.setCurrentFrame(0);
-	player.setFrameDelay(0.25);
+	player.setFrameDelay(0.33);
 
 	if(!PlatformTM.initialize(graphics, "images\\platform.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform texture"));
@@ -56,11 +56,6 @@ void NinjaGhost::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard"));
 	testDummy.setX(3*GAME_WIDTH/4);
 	testDummy.setY(GAME_HEIGHT/2);
-
-	if(!PlayerTextureManager.initialize(graphics, "images\\player2.png"))
-		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
-	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 2, &PlayerTextureManager))
-		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	
 	if(!KatanaTM.initialize(graphics, KATANA_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana texture"));
