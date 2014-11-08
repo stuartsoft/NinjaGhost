@@ -16,6 +16,7 @@
 #include "katana.h"
 #include "shuriken.h"
 #include "platform.h"
+#include "guard.h"
 
 class NinjaGhost : public Game
 {
@@ -23,6 +24,10 @@ private:
 	// game items
 	Player player;
 	Platform platform;
+
+	Guard testDummy;
+	TextureManager GuardTM;
+
 	TextureManager PlayerTextureManager;
 	TextureManager KatanaTM;
 	TextureManager ShurikenTM;
@@ -33,7 +38,7 @@ private:
 	
 	// game variables
 	float timeSinceThrow;
-
+	VECTOR2 collisionVec;
 
 	// MENU/SPLASH STUFF
 	Menu *mainMenu;

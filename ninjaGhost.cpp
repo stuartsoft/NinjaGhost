@@ -39,16 +39,28 @@ void NinjaGhost::initialize(HWND hwnd)
 	if(!PlayerTextureManager.initialize(graphics, "images\\player2.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 2, &PlayerTextureManager))
-		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
-
-	if(!PlatformTM.initialize(graphics, "images\\platform.png"))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform texture"));
-	if(!platform.initialize(this, Platformns::WIDTH, Platformns::HEIGHT, 0, &PlatformTM))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init player texture"));
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player"));
 
 	player.setFrames(0,3);
 	player.setCurrentFrame(0);
 	player.setFrameDelay(0.25);
+
+	if(!PlatformTM.initialize(graphics, "images\\platform.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform texture"));
+	if(!platform.initialize(this, Platformns::WIDTH, Platformns::HEIGHT, 0, &PlatformTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform"));
+
+	if(!GuardTM.initialize(graphics, "images\\guard.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard texture"));
+	if(!testDummy.initialize(this, guardNS::WIDTH, guardNS::HEIGHT, 2, &GuardTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard"));
+	testDummy.setX(GAME_WIDTH/2);
+	testDummy.setY(GAME_HEIGHT/2);
+
+	if(!PlayerTextureManager.initialize(graphics, "images\\player2.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
+	if(!player.initialize(this, Playerns::WIDTH, Playerns::HEIGHT, 2, &PlayerTextureManager))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init player texture"));
 	
 	if(!KatanaTM.initialize(graphics, KATANA_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana texture"));
@@ -179,6 +191,11 @@ void NinjaGhost::update()
 		}
 		break;
 	case LEVEL1:
+
+		if(input->isKeyDown(ENTER_KEY))
+			testDummy.setActive(true);
+		testDummy.update(frameTime);
+
 		player.update(frameTime);
 		katana.update(frameTime);
 		platform.update(frameTime);
@@ -223,6 +240,10 @@ void NinjaGhost::render()
 		Level1Splash.draw();
 		break;
 	case LEVEL1:
+		
+		if(testDummy.getActive())
+			testDummy.draw();
+
 		platform.draw();
 		player.draw();
 		if(katana.getActive())
@@ -257,7 +278,19 @@ void NinjaGhost::render()
 //==================================================================
 void NinjaGhost::collisions()
 {
-
+	collisionVec = VECTOR2(0,0);
+	if(katana.getActive() && katana.collidesWith(testDummy,collisionVec))
+	{
+		testDummy.setActive(false);
+	}
+	for(int i=0; i<MAX_SHURIKEN; i++)
+	{
+		if(shuriken[i].getActive() && shuriken[i].collidesWith(testDummy,collisionVec))
+		{
+			testDummy.setActive(false);
+			shuriken[i].setActive(false);
+		}
+	}
 }
 
 //==================================================================
@@ -294,6 +327,7 @@ void NinjaGhost::releaseAll()
 	gameOverFont2->onLostDevice();
 	gameCompleteFont1->onLostDevice();
 	gameCompleteFont2->onLostDevice();
+	GuardTM.onLostDevice();
 	KatanaTM.onLostDevice();
 	ShurikenTM.onLostDevice();
 	PlayerTextureManager.onLostDevice();
@@ -314,6 +348,7 @@ void NinjaGhost::resetAll()
 	gameOverFont2->onResetDevice();
 	gameCompleteFont1->onResetDevice();
 	gameCompleteFont2->onResetDevice();
+	GuardTM.onResetDevice();
 	KatanaTM.onResetDevice();
 	ShurikenTM.onResetDevice();
 	PlayerTextureManager.onResetDevice();

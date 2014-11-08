@@ -11,6 +11,8 @@
 #include "input.h"
 #include "game.h"
 
+enum direction {left , right, up, down};
+
 namespace entityNS
 {
     enum COLLISION_TYPE {NONE, CIRCLE, BOX, ROTATED_BOX};
