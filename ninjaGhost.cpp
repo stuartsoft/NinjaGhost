@@ -54,7 +54,7 @@ void NinjaGhost::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard texture"));
 	if(!testDummy.initialize(this, guardNS::WIDTH, guardNS::HEIGHT, 2, &GuardTM))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard"));
-	testDummy.setX(GAME_WIDTH/2);
+	testDummy.setX(3*GAME_WIDTH/4);
 	testDummy.setY(GAME_HEIGHT/2);
 
 	if(!PlayerTextureManager.initialize(graphics, "images\\player2.png"))
@@ -141,6 +141,15 @@ void NinjaGhost::reset()
 }
 
 
+//=================================
+// initialize game items for level1
+//=================================
+void NinjaGhost::LoadLevel1()
+{
+	testDummy.initializePatrol(3*GAME_WIDTH/4, GAME_WIDTH/5);
+}
+
+
 //===============================
 // update game state information
 //===============================
@@ -156,6 +165,7 @@ void NinjaGhost::gameStateUpdate()
 	{
 		gameState = LEVEL1;
 		timeInState = 0;
+		LoadLevel1();
 	}
 	if(gameState == GAME_OVER && input->isKeyDown(ENTER_KEY))
 	{
@@ -278,17 +288,25 @@ void NinjaGhost::render()
 //==================================================================
 void NinjaGhost::collisions()
 {
-	collisionVec = VECTOR2(0,0);
-	if(katana.getActive() && katana.collidesWith(testDummy,collisionVec))
+	if(gameState == LEVEL1 || gameState == LEVEL2)
 	{
-		testDummy.setActive(false);
-	}
-	for(int i=0; i<MAX_SHURIKEN; i++)
-	{
-		if(shuriken[i].getActive() && shuriken[i].collidesWith(testDummy,collisionVec))
+		collisionVec = VECTOR2(0,0);
+		if(katana.getActive() && katana.collidesWith(testDummy,collisionVec))
 		{
 			testDummy.setActive(false);
-			shuriken[i].setActive(false);
+		}
+		for(int i=0; i<MAX_SHURIKEN; i++)
+		{
+			if(shuriken[i].getActive() && shuriken[i].collidesWith(testDummy,collisionVec))
+			{
+				testDummy.setActive(false);
+				shuriken[i].setActive(false);
+			}
+		}
+		if(player.collidesWith(testDummy,collisionVec))
+		{
+			gameState = GAME_OVER;
+			timeInState = 0;
 		}
 	}
 }

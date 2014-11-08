@@ -15,6 +15,12 @@ Guard::Guard(){
 	setHealth(guardNS::MAX_HEALTH);
 	health = guardNS::MAX_HEALTH;
 	facingdir = right;
+
+	edge.left = -guardNS::WIDTH/2;
+	edge.right = guardNS::WIDTH/2;
+	edge.top = -guardNS::HEIGHT/2;
+	edge.bottom = guardNS::HEIGHT/2;
+
 }
 
 void Guard::draw()
@@ -22,8 +28,15 @@ void Guard::draw()
 	Image::draw();
 }
 
-direction Guard::FacingDir(){
+direction Guard::FacingDir()
+{
 	return facingdir;
+}
+
+void Guard::initializePatrol(int pAnchor, int pWidth)
+{
+	patrolAnchor = pAnchor;
+	patrolWidth = pWidth;
 }
 
 void Guard::update(float frameTime){
@@ -33,12 +46,23 @@ void Guard::update(float frameTime){
 	
 	setFrameDelay(0.25);
 
+	if(facingdir == left)
+	{
+		velocity.x = -guardNS::SPEED;
+	}
+	else if(facingdir == right)
+	{
+		velocity.x = guardNS::SPEED;
+	}
 	
-	//speed cap
-	if(velocity.x > guardNS::MAX_SPEED_X)
-		velocity.x = guardNS::MAX_SPEED_X;
-	else if (velocity.x < -guardNS::MAX_SPEED_X)
-		velocity.x = -guardNS::MAX_SPEED_X;
+	if(spriteData.x > patrolAnchor + patrolWidth)
+	{
+		facingdir = left;
+	}
+	else if(spriteData.x < patrolAnchor - patrolWidth)
+	{
+		facingdir = right;
+	}
 
 	//acceleration of gravity
 	deltaV.y = 2000*(frameTime);

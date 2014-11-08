@@ -12,18 +12,26 @@ namespace guardNS
     const int Y = GAME_HEIGHT/2 - HEIGHT/2;
     const float MASS = 300.0f;              // mass
 	const float MAX_HEALTH = 4.0f;
-	const int MAX_SPEED_X =750;
+	const int SPEED = 300;
+	const int MAX_SPEED_X = 750;
 	const int MAX_SPEED_Y = 1000;
 }
 
 class Guard: public Entity{
 private:
 	direction facingdir;
+
+	int patrolAnchor;
+	int patrolWidth;
+	int patrolPos;
+
 public:
 	Guard();
 	direction FacingDir();
 	void Guard::draw();
 	void Guard::update(float frameTime);
+
+	void initializePatrol(int pAnchor, int pWidth);
 };
 
 #endif

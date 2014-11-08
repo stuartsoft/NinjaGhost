@@ -61,6 +61,8 @@ private:
 	float timeInState;
 	void gameStateUpdate();
 
+	void LoadLevel1();
+
 	// functs
 	void spawnShuriken(VECTOR2 pos, VECTOR2 vel);
 
