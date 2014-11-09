@@ -11,7 +11,7 @@ void Menu::initialize(Graphics *g, Input *i)
 {
 	menuHeading ="Ninja Ghost";
 	menuItem1 = "Start Game";
-	menuItem2 = "Options";
+	menuItem2 = "Tutorial";
 	menuItem3 = "Cheat Codes";
 	menuItem4 = "Exit";
 	highlightColor = graphicsNS::ORANGE;

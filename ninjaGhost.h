@@ -39,6 +39,7 @@ private:
 	TextureManager KatanaTM;
 	TextureManager ShurikenTM;
 	TextureManager PlatformTM;
+	TextureManager GunTM;
 	
 	Katana katana;
 	Shuriken shuriken[MAX_SHURIKEN];
@@ -58,6 +59,8 @@ private:
 	Image Level1Splash;
 	TextureManager Level2SplashTM;
 	Image Level2Splash;
+	TextureManager TutorialTM;
+	Image Tutorial;
 
 	TextDX *gameOverFont1;
 	TextDX *gameOverFont2;

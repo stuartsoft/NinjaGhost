@@ -42,7 +42,7 @@ const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 fr
 const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
 
 const int NUM_PLATFORMS = 10;
-const int MAX_SHURIKEN = 10;
+const int MAX_SHURIKEN = 5;
 const int MAX_GUARDS = 25;
 
 const int LEVEL1_GUARDS = 10;
@@ -77,9 +77,10 @@ const char SHURIKEN_IMAGE[] = "images\\shuriken2.png";
 const char MAIN_MENU_IMAGE[] = "images\\menu.png";
 const char SPLASH1_IMAGE[] = "images\\splash1.png";
 const char SPLASH2_IMAGE[] = "images\\splash1.png";
+const char TUTORIAL_IMAGE[] = "images\\tutorial.png";
 
 // States
-enum GameStates {MAIN_MENU, INTRO1, LEVEL1, INTRO2, LEVEL2, GAME_OVER, GAME_COMPLETE};
+enum GameStates {MAIN_MENU, TUTORIAL, INTRO1, LEVEL1, INTRO2, LEVEL2, GAME_OVER, GAME_COMPLETE};
 
 // Pattern Step Actions
 enum PATTERN_STEP_ACTION {NONE, LEFT, RIGHT};

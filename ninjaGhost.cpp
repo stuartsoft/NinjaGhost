@@ -77,6 +77,8 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	if(!GuardTM.initialize(graphics, "images\\guard.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard texture"));
+	if(!GunTM.initialize(graphics, "images\\katana.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init gun texture"));
 
 	for(int i=0; i<MAX_GUARDS; i++)
 	{
@@ -84,6 +86,7 @@ void NinjaGhost::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard"));
 		guards[i].setX(0);
 		guards[i].setY(0);
+		guards[i].gunInit(&GunTM);
 	}
 	
 	if(!KatanaTM.initialize(graphics, KATANA_IMAGE))
@@ -122,6 +125,13 @@ void NinjaGhost::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init level2 splash image"));
 	Level2Splash.setX(0);
 	Level2Splash.setY(0);
+
+	if(!TutorialTM.initialize(graphics, TUTORIAL_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init tutorial texture"));
+	if(!Tutorial.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &TutorialTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init tutorial image"));
+	Tutorial.setX(0);
+	Tutorial.setY(0);
 
 
 	if(gameOverFont1->initialize(graphics, 72, true, false, "Forte") == false)
@@ -169,10 +179,6 @@ void NinjaGhost::reset()
 void NinjaGhost::LoadLevel1()
 {
 	//position platforms
-	guards[1].initializePatrol(3*GAME_WIDTH/4, GAME_WIDTH/5);
-	guards[1].setX(GAME_WIDTH/2);
-	guards[1].setY(0);
-
 	YOffset = 0;
 	player.setX(0);
 	player.setY(0);
@@ -189,6 +195,8 @@ void NinjaGhost::LoadLevel1()
 		}
 	}
 	myfile.close();
+
+	guards[1].initializePatrol(&platforms[1], &player);
 }
 
 
@@ -203,18 +211,28 @@ void NinjaGhost::gameStateUpdate()
 		gameState = INTRO1;
 		timeInState = 0;
 	}
+	if(gameState == MAIN_MENU && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 1)
+	{
+		gameState = TUTORIAL;
+		timeInState = 0;
+	}
+	if(gameState == TUTORIAL && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY))
+	{
+		gameState = MAIN_MENU;
+		timeInState = 0;
+	}
 	if(gameState == INTRO1 && timeInState > 1.0)
 	{
 		gameState = LEVEL1;
 		timeInState = 0;
 		LoadLevel1();
 	}
-	if(gameState == GAME_OVER && input->isKeyDown(ENTER_KEY))
+	if(gameState == GAME_OVER && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY))
 	{
 		gameState = MAIN_MENU;
 		timeInState = 0;
 	}
-	if(gameState == GAME_COMPLETE && input->isKeyDown(ENTER_KEY))
+	if(gameState == GAME_COMPLETE && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY))
 	{
 		gameState = MAIN_MENU;
 		timeInState = 0;
@@ -246,8 +264,8 @@ void NinjaGhost::update()
 
 		if(input->isKeyDown(ENTER_KEY))
 			guards[1].setActive(true);
-		guards[1].update(frameTime);
-
+		guards[1].update(frameTime, YOffset);
+		
 		if (player.getCenter()->y < GAME_HEIGHT/3)//up
 			YOffset = -player.getVelocity().y*frameTime;
 		else if (player.getCenter()->y > GAME_HEIGHT*2/3)
@@ -303,8 +321,7 @@ void NinjaGhost::render()
 		break;
 	case LEVEL1:
 		Backgroundimg[0].draw();
-
-
+		
 		if(guards[1].getActive())
 			guards[1].draw();
 
@@ -333,6 +350,9 @@ void NinjaGhost::render()
 		graphics->setBackColor(graphicsNS::WHITE);
 		gameCompleteFont1->print("Victory is yours!",GAME_WIDTH/3,GAME_HEIGHT/3);
 		gameCompleteFont2->print("Press Enter to return to main menu",GAME_WIDTH/3,2*GAME_HEIGHT/3);
+		break;
+	case TUTORIAL:
+		Tutorial.draw();
 		break;
 	}
 	
@@ -419,10 +439,12 @@ void NinjaGhost::releaseAll()
 	GuardTM.onLostDevice();
 	KatanaTM.onLostDevice();
 	ShurikenTM.onLostDevice();
+	GunTM.onLostDevice();
 	PlayerTextureManager.onLostDevice();
 	MainMenuSplashTM.onLostDevice();
 	Level1SplashTM.onLostDevice();
 	Level2SplashTM.onLostDevice();
+	TutorialTM.onLostDevice();
 	BackgroundTM.onLostDevice();
 	BlackBoardersTM.onLostDevice();
 	RedBoardersTM.onLostDevice();
@@ -443,10 +465,12 @@ void NinjaGhost::resetAll()
 	GuardTM.onResetDevice();
 	KatanaTM.onResetDevice();
 	ShurikenTM.onResetDevice();
+	GunTM.onResetDevice();
 	PlayerTextureManager.onResetDevice();
 	MainMenuSplashTM.onResetDevice();
 	Level1SplashTM.onResetDevice();
 	Level2SplashTM.onResetDevice();
+	TutorialTM.onResetDevice();
 	BackgroundTM.onResetDevice();
 	BlackBoardersTM.onResetDevice();
 	RedBoardersTM.onResetDevice();
