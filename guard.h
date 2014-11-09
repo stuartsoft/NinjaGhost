@@ -57,8 +57,10 @@ public:
 	Guard();
 	direction FacingDir();
 	void Guard::draw();
-	void Guard::update(float frameTime, int yOffset);
+	void Guard::update(float frameTime);
 	void Guard::ai();
+
+	void setVelY(int y) {velocity.y = y;}
 
 	void gunInit(TextureManager* gunTM);
 	void setTarget();
