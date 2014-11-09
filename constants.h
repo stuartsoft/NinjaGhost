@@ -43,6 +43,10 @@ const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calcul
 
 const int NUM_PLATFORMS = 4;
 const int MAX_SHURIKEN = 10;
+const int MAX_GUARDS = 25;
+
+const int LEVEL1_GUARDS = 10;
+const int LEVEL2_GUARDS = 15;
 
 const float THROW_COOLDOWN = 1.2;
 const float KATANA_COOLDOWN = 0.7;

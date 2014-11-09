@@ -25,9 +25,8 @@ private:
 	Player player;
 	Platform platforms[NUM_PLATFORMS];
 
-	Guard testDummy;
+	
 	TextureManager GuardTM;
-
 	TextureManager PlayerTextureManager;
 	TextureManager KatanaTM;
 	TextureManager ShurikenTM;
@@ -36,6 +35,8 @@ private:
 	Katana katana;
 	Shuriken shuriken[MAX_SHURIKEN];
 	
+	Guard guards[MAX_GUARDS];
+
 	// game variables
 	float timeSinceThrow;
 	VECTOR2 collisionVec;
