@@ -22,12 +22,19 @@ class NinjaGhost : public Game
 {
 private:
 	// game items
+	int YOffset;
 	Player player;
 	Platform platforms[NUM_PLATFORMS];
+	Image Backgroundimg[2];
+	Image BlackBoarders;
+	Image RedBoarders;
 
 	Guard testDummy;
 	TextureManager GuardTM;
 
+	TextureManager BackgroundTM;
+	TextureManager BlackBoardersTM;
+	TextureManager RedBoardersTM;
 	TextureManager PlayerTextureManager;
 	TextureManager KatanaTM;
 	TextureManager ShurikenTM;

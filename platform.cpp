@@ -19,6 +19,7 @@ void Platform::draw()
 	Image::draw();              // draw Player
 }
 
-void Platform::update(float frameTime){
-
+void Platform::update(float frameTime, int YOffset){
+	Entity::update(frameTime);
+	spriteData.y += YOffset;
 }

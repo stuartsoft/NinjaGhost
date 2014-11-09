@@ -4,6 +4,10 @@
 // Chapter 8 threeCsDX.cpp v1.0
 
 #include "ninjaGhost.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 //=============================================================================
 // Constructor
@@ -45,6 +49,24 @@ void NinjaGhost::initialize(HWND hwnd)
 	player.setCurrentFrame(0);
 	player.setFrameDelay(0.33);
 
+	if(!BackgroundTM.initialize(graphics, "images\\background.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init background texture"));
+
+	if (!Backgroundimg[0].initialize(graphics, 1280,720,0,&BackgroundTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init background image"));
+	if (!Backgroundimg[1].initialize(graphics, 1280,720,0,&BackgroundTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init background image"));
+
+	if(!BlackBoardersTM.initialize(graphics, "images\\blackbars.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init black boarder texture"));
+	if(!BlackBoarders.initialize(graphics, 1280,720,0,&BlackBoardersTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init black boarder image"));
+	
+	if(!RedBoardersTM.initialize(graphics, "images\\Redbars.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init Red boarder texture"));
+	if(!RedBoarders.initialize(graphics, 1280,720,0,&RedBoardersTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init Red boarder image"));
+
 	if(!PlatformTM.initialize(graphics, "images\\platform.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform texture"));
 	
@@ -52,13 +74,6 @@ void NinjaGhost::initialize(HWND hwnd)
 		if(!platforms[i].initialize(this, Platformns::WIDTH, Platformns::HEIGHT, 0, &PlatformTM))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform"));
 	}
-
-	platforms[0].setY(GAME_HEIGHT-250);
-	platforms[1].setY(GAME_HEIGHT-50);
-	platforms[1].setX(0);
-	platforms[2].setY(GAME_HEIGHT-50);
-	platforms[3].setY(GAME_HEIGHT-50);
-	platforms[3].setX(GAME_WIDTH-platforms[3].getWidth()*platforms[3].getScale());
 
 	if(!GuardTM.initialize(graphics, "images\\guard.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard texture"));
@@ -81,8 +96,6 @@ void NinjaGhost::initialize(HWND hwnd)
 		if(!shuriken[i].initialize(this, shurikenNS::WIDTH, shurikenNS::HEIGHT, 0, &ShurikenTM))
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken"));
 	}
-
-	//player.setScale(2.0);
 
 	// splash screen init
 	if(!MainMenuSplashTM.initialize(graphics, MAIN_MENU_IMAGE))
@@ -151,6 +164,24 @@ void NinjaGhost::reset()
 //=================================
 void NinjaGhost::LoadLevel1()
 {
+	//position platforms
+	testDummy.setActive(false);
+	YOffset = 0;
+	player.setX(0);
+	player.setY(0);
+	ifstream myfile("Levels\\L1.txt");
+	if (myfile.is_open()){
+		for (int i=0;i<NUM_PLATFORMS;i++){
+			string line;
+			getline(myfile,line);
+			int x,y;
+			x = atoi(strtok(strdup(line.c_str()),","));
+			y = atoi(strtok(NULL,","));
+			platforms[i].setX(x);
+			platforms[i].setY(y);
+		}
+	}
+	myfile.close();
 	testDummy.initializePatrol(3*GAME_WIDTH/4, GAME_WIDTH/5);
 }
 
@@ -211,7 +242,18 @@ void NinjaGhost::update()
 			testDummy.setActive(true);
 		testDummy.update(frameTime);
 
-		player.update(frameTime, platforms);
+		if (player.getCenter()->y < GAME_HEIGHT/3)//up
+			YOffset = -player.getVelocity().y*frameTime;
+		else if (player.getCenter()->y > GAME_HEIGHT*2/3)
+			YOffset = -player.getVelocity().y*frameTime;
+		else
+			YOffset = 0;
+
+		for (int i=0;i<NUM_PLATFORMS;i++){
+			platforms[i].update(frameTime,YOffset);
+		}
+
+		player.update(frameTime, platforms, YOffset);
 		katana.update(frameTime);
 		timeSinceThrow += frameTime;
 		if(timeSinceThrow >= 100)
@@ -254,7 +296,8 @@ void NinjaGhost::render()
 		Level1Splash.draw();
 		break;
 	case LEVEL1:
-		
+		Backgroundimg[0].draw();
+
 		if(testDummy.getActive())
 			testDummy.draw();
 
@@ -272,6 +315,7 @@ void NinjaGhost::render()
 				shuriken[i].draw();
 			}
 		}
+		BlackBoarders.draw();
 		break;
 	case GAME_OVER:
 		graphics->setBackColor(graphicsNS::BLACK);
@@ -372,6 +416,9 @@ void NinjaGhost::releaseAll()
 	MainMenuSplashTM.onLostDevice();
 	Level1SplashTM.onLostDevice();
 	Level2SplashTM.onLostDevice();
+	BackgroundTM.onLostDevice();
+	BlackBoardersTM.onLostDevice();
+	RedBoardersTM.onLostDevice();
 	Game::releaseAll();
 	return;
 }
@@ -393,6 +440,9 @@ void NinjaGhost::resetAll()
 	MainMenuSplashTM.onResetDevice();
 	Level1SplashTM.onResetDevice();
 	Level2SplashTM.onResetDevice();
+	BackgroundTM.onResetDevice();
+	BlackBoardersTM.onResetDevice();
+	RedBoardersTM.onResetDevice();
 	Game::resetAll();
 	return;
 }
