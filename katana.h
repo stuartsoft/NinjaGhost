@@ -8,7 +8,7 @@
 
 namespace katanaNS
 {
-	const int WIDTH = 147;                   // image width
+	const int WIDTH = 149;                   // image width
 	const int HEIGHT = 8;                  // image height
 	const float ROTATION_RATE = 360.0;  // degrees per second
 	const float SPEED = 300;                // 10 pixels per second

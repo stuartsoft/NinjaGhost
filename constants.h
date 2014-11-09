@@ -70,7 +70,7 @@ const UCHAR THROW_KEY	 = VK_RBUTTON;   // right button
 
 // texture images
 const char KATANA_IMAGE[] = "images\\katana.png";
-const char SHURIKEN_IMAGE[] = "images\\shuriken.png";
+const char SHURIKEN_IMAGE[] = "images\\shuriken2.png";
 
 
 // splash screen images
