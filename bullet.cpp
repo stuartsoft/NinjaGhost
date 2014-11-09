@@ -20,6 +20,11 @@ Bullet::Bullet() : Entity()
 	active = false;
 }
 
+void Bullet::draw()
+{
+	Image::draw();
+}
+
 void Bullet::update(float frameTime)
 {
 	Entity::update(frameTime);

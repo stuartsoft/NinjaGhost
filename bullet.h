@@ -10,13 +10,14 @@ namespace bulletNS
 	const int WIDTH = 54;                   // image width
 	const int HEIGHT = 54;                  // image height
 
-	const float SPEED = 6000;                // 10 pixels per second
+	const float SPEED = 400;                // 10 pixels per second
 	const float MASS = 300.0f;              // mass
 	const float SCALE = 0.7;
 	const float GRAVITY = 800;
 
 	const int   TEXTURE_COLS = 1;           // texture has 1 columns
 
+	const float COLLISION_DAMAGE = 75;
 }
 
 class Bullet : public Entity
@@ -27,6 +28,10 @@ public:
 
     // inherited member functions
     void update(float frameTime);
+	void draw();
+
+	void addVelY(int y) {velocity.y += y;}
+	void subVelY(int y) {velocity.y -= y;}
 
 private:
 };

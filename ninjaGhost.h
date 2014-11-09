@@ -55,6 +55,11 @@ private:
 	float timeSinceThrow;
 	VECTOR2 collisionVec;
 
+	int lives;
+	int ammo;
+	int score;
+	
+
 	// MENU/SPLASH STUFF
 	Menu *mainMenu;
 

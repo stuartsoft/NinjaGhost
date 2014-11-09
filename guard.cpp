@@ -26,6 +26,7 @@ Guard::Guard()
 	dist = 0;
 	target = nullptr;
 	targetAquired = false;
+	timeSinceShoot = 0;
 }
 
 void Guard::gunInit(TextureManager* gunTM)
@@ -40,6 +41,26 @@ void Guard::bulletsInit(TextureManager* bulletTM, Game* g)
 	{
 		if(!bullets[i].initialize(g, bulletNS::WIDTH, bulletNS::HEIGHT, 0, bulletTM))
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init bullets"));
+	}
+}
+
+void Guard::spawnBullet(VECTOR2 pos, VECTOR2 vel)
+{
+	Bullet* first = nullptr;
+	for(int i=0; i<BULLETS_PER_GUARD; i++)
+	{
+		if(!(bullets[i].getActive()))
+		{
+			first = &bullets[i];
+			break;
+		}
+	}
+	if(first != nullptr)
+	{
+		first->setActive(true);
+		first->setVelocity(vel);
+		first->setX(pos.x);
+		first->setY(pos.y);
 	}
 }
 
@@ -79,6 +100,8 @@ void Guard::update(float frameTime){
 	Entity::update(frameTime);
 	spriteData.x += frameTime * velocity.x;
 	spriteData.y += frameTime * velocity.y;
+
+	timeSinceShoot += frameTime;
 
 	if(spriteData.x >= patrolAnchor + Platformns::WIDTH/2)
 	{
@@ -128,6 +151,14 @@ void Guard::ai()
 	else if(dist < guardNS::ATTACK_DIST)		//ATTACK
 	{
 		velocity.x = 0;
+		if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
+		{
+			VECTOR2 pos = VECTOR2(getCenterX(),getCenterY());
+			VECTOR2 dir = VECTOR2(target->getCenterX(),target->getCenterY()) - pos;
+			D3DXVec2Normalize(&dir,&dir);
+			spawnBullet(pos, dir*bulletNS::SPEED);
+			timeSinceShoot = 0;
+		}
 	}
 	else 										//PATROL
 	{

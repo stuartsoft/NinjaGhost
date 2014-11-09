@@ -55,6 +55,14 @@ const int LEVEL2_PLATFORMS = 20;
 const float THROW_COOLDOWN = 1.2;
 const float KATANA_COOLDOWN = 0.7;
 
+const int STARTING_LIVES = 3;
+const int MAX_AMMO = 5;
+const int AMMO_PER_MELEE_KILL = 2;
+const int AMMO_PER_RANGED_KILL = 1;
+
+const int SCORE_PER_MELEE_KILL = 100;
+const int SCORE_PER_RANGED_KILL = 50;
+
 // audio files
 const char WAVE_BANK[] = "";
 const char SOUND_BANK[] = "";

@@ -25,7 +25,9 @@ namespace guardNS
 	const float FLEE_DIST = GAME_WIDTH/4;
 	const float ATTACK_DIST = GAME_WIDTH/3;
 
-	const int COLLISION_DAMAGE = 10;
+	const int COLLISION_DAMAGE = 50;
+
+	const float SHOOT_COOLDOWN = 1.0;
 
 }
 
@@ -38,6 +40,8 @@ namespace gunNS
 
 class Guard: public Entity{
 private:
+	Image gun;
+	
 	direction facingDir;
 	direction patrolDir;
 
@@ -51,7 +55,9 @@ private:
 	bool targetAquired;
 	float targetAngle;
 
-	Image gun;
+	float timeSinceShoot;
+
+	void spawnBullet(VECTOR2 pos, VECTOR2 vel);
 
 public:
 	Guard();

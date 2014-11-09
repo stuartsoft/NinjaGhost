@@ -89,7 +89,7 @@ void NinjaGhost::initialize(HWND hwnd)
 		guards[i].setX(0);
 		guards[i].setY(0);
 		guards[i].gunInit(&GunTM);
-
+		guards[i].bulletsInit(&BulletTM,this);
 	}
 
 	if(!KatanaTM.initialize(graphics, KATANA_IMAGE))
@@ -162,6 +162,10 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	//var init
 	timeSinceThrow = 0;
+	lives = STARTING_LIVES;
+	ammo = MAX_AMMO;
+	score = 0;
+
 	return;
 }
 
@@ -204,6 +208,9 @@ void NinjaGhost::LoadLevel1()
 	{
 		guards[i].initializePatrol(&platforms[1], &player);
 	}
+
+	ammo = MAX_AMMO;
+
 }
 
 
@@ -269,6 +276,20 @@ void NinjaGhost::update()
 	case LEVEL1:
 	case LEVEL2:
 
+		if(player.getHealth() <= 0)
+		{
+			lives--;
+			if(lives <= 0)
+			{
+				gameState = GAME_OVER;
+				timeInState = 0;
+			}
+			else
+			{
+
+			}
+		}
+
 		if(input->isKeyDown(ENTER_KEY))
 			guards[0].setActive(true);
 
@@ -293,13 +314,19 @@ void NinjaGhost::update()
 		{
 			guards[i].setVelY(tempv.y);
 			guards[i].update(frameTime);
+			for(int j=0; j<BULLETS_PER_GUARD; j++)
+			{
+				guards[i].bullets[j].addVelY(tempv.y);
+				guards[i].bullets[j].update(frameTime);
+				guards[i].bullets[j].subVelY(tempv.y);
+			}
 		}
-
+		
 		katana.update(frameTime);
 		timeSinceThrow += frameTime;
 		if(timeSinceThrow >= 100)
 			timeSinceThrow = 30;
-		if(timeSinceThrow >= THROW_COOLDOWN && input->getMouseRButton())
+		if(ammo > 0 && timeSinceThrow >= THROW_COOLDOWN && input->getMouseRButton())
 		{
 			VECTOR2 pos = VECTOR2(player.getCenterX(),player.getCenterY());
 			VECTOR2 dir = VECTOR2(input->getMouseX(),input->getMouseY()) - pos;
@@ -308,6 +335,7 @@ void NinjaGhost::update()
 			normdir *= min(D3DXVec2Length(&dir)*shurikenNS::SPEED/GAME_WIDTH,shurikenNS::MAX_SPEED);
 			spawnShuriken(pos, normdir);
 			timeSinceThrow = 0;
+			ammo -= 1;
 		}
 		for(int i=0; i<MAX_SHURIKEN; i++)
 		{
@@ -424,12 +452,22 @@ void NinjaGhost::collisions()
 
 		for(int i=0; i<LEVEL_GUARDS(); i++)
 		{
+			for(int j=0; j<BULLETS_PER_GUARD; j++)
+			{
+				if(guards[i].bullets[j].getActive() && player.collidesWith(guards[i].bullets[j],collisionVec))
+				{
+					player.setHealth(player.getHealth()-bulletNS::COLLISION_DAMAGE);
+					guards[i].bullets[j].setActive(false);
+				}
+			}
+
 			if(guards[i].getActive())
 			{
 				if(katana.getActive() && katana.collidesWith(guards[i],collisionVec))
 				{
 					guards[i].setActive(false);
-					
+					ammo += AMMO_PER_MELEE_KILL;
+					score += SCORE_PER_MELEE_KILL;
 				}
 				
 				if(player.collidesWith(guards[i],collisionVec))
@@ -443,6 +481,8 @@ void NinjaGhost::collisions()
 					{
 						guards[i].setActive(false);
 						shuriken[j].setActive(false);
+						ammo += AMMO_PER_RANGED_KILL;
+						score += SCORE_PER_RANGED_KILL;
 					}
 				}
 
