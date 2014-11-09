@@ -23,7 +23,7 @@ class NinjaGhost : public Game
 private:
 	// game items
 	Player player;
-	Platform platform;
+	Platform platforms[NUM_PLATFORMS];
 
 	Guard testDummy;
 	TextureManager GuardTM;

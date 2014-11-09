@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "entity.h"
+#include "platform.h"
 
 namespace Playerns{
     const int WIDTH =128;                   // image width
@@ -25,7 +26,7 @@ public:
 	direction FacingDir();
 	float getfloatoffset();
 	void Player::draw();
-	void Player::update(float frameTime);
+	void Player::update(float frameTime, Platform platforms[]);
 };
 
 #endif

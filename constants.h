@@ -41,6 +41,7 @@ const float MIN_FRAME_RATE = 10.0f;             // the minimum frame rate
 const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 frame
 const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
 
+const int NUM_PLATFORMS = 4;
 const int MAX_SHURIKEN = 10;
 
 const float THROW_COOLDOWN = 1.2;

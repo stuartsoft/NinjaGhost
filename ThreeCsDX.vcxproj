@@ -102,7 +102,7 @@
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="patternStep.cpp" />
     <ClCompile Include="platform.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="shuriken.cpp" />
     <ClCompile Include="textDX.cpp" />
     <ClCompile Include="ninjaGhost.cpp" />
@@ -123,7 +123,7 @@
     <ClInclude Include="menu.h" />
     <ClInclude Include="patternStep.h" />
     <ClInclude Include="platform.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="shuriken.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="ninjaGhost.h" />

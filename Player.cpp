@@ -21,10 +21,10 @@ Player::Player(){
 
 void Player::draw()
 {
-	if (velocity.y <0.0001 && velocity.y > -0.0001)
+	if (velocity.y <0.001 && velocity.y > -0.001)
 		spriteData.y+=floatoffset;
 	Image::draw();              // draw Player
-	if (velocity.y <0.0001 && velocity.y > -0.0001)
+	if (velocity.y <0.001 && velocity.y > -0.001)
 		spriteData.y-=floatoffset;
 }
 
@@ -36,11 +36,7 @@ float Player::getfloatoffset(){
 	return floatoffset;
 }
 
-void Player::update(float frameTime){
-	Entity::update(frameTime);
-	spriteData.x += frameTime * velocity.x;							// move ship along X 
-	spriteData.y += frameTime * velocity.y;						   // move ship along Y
-
+void Player::update(float frameTime, Platform platforms[]){
 	D3DXVECTOR2 inputDir(0,0);
 	if (input->isKeyDown(0x41)){//left
 		inputDir.x = -1;
@@ -61,7 +57,27 @@ void Player::update(float frameTime){
 		//setCurrentFrame(0);
 	}
 
-	if (input->isKeyDown(VK_SPACE) && spriteData.y == GAME_HEIGHT- getHeight()*getScale())//up
+		//acceleration of gravity
+	deltaV.y = 2000*(frameTime);
+	//while falling and pressing space, replace gravitational acceleration with static velocity
+	if (velocity.y > 200  && input->isKeyDown(VK_SPACE)){
+		deltaV.y = 0.0;
+		velocity.y = 200;
+	}
+
+	BOOL StandingOnPlatform = FALSE;
+	for (int i=0;i<NUM_PLATFORMS;i++){
+		if (platforms[i].getY() == getY() + getHeight()*getScale()){
+			if(getX() < platforms[i].getX()+platforms[i].getWidth()*platforms[i].getScale() && getX()+getWidth()*getScale() > platforms[i].getX()){
+				deltaV.y = 0;
+				velocity.y = 0;
+				StandingOnPlatform = TRUE;
+				break;
+			}
+		}
+	}
+
+	if (input->isKeyDown(VK_SPACE) && StandingOnPlatform)//up
 		inputDir.y = -1;
 
 	//D3DXVec2Normalize(&inputDir,&inputDir);
@@ -89,14 +105,7 @@ void Player::update(float frameTime){
 	else if(inputDir.x ==0 && velocity.x < 0)
 		deltaV.x+=2.5;
 
-	//acceleration of gravity
-	deltaV.y = 2000*(frameTime);
-	//while falling and pressing space, replace gravitational acceleration with static velocity
-	if (velocity.y > 200  && input->isKeyDown(VK_SPACE)){
-		deltaV.y = 0.0;
-		velocity.y = 200;
-	}
-
+	//====================Floating animation
 	if (floatdir == up)
 		floatoffset -= 20*frameTime;
 	else
@@ -107,16 +116,15 @@ void Player::update(float frameTime){
 	else if (floatoffset < -10 && floatdir == up)
 		floatdir = down;
 
+	//====================Edge wrapping
+
 	if (spriteData.x + 2*radius*getScale() < 0)	//left edge
 		spriteData.x = GAME_WIDTH;
 	else if (spriteData.x > GAME_WIDTH)			//right edge
 		spriteData.x = -2*radius*getScale();
 
-	if (spriteData.y > GAME_HEIGHT - getHeight()*getScale()){
-		spriteData.y = GAME_HEIGHT - getHeight()*getScale();
-		deltaV.y = 0;
-		//velocity.y = -velocity.y/2;
-		velocity.y = 0;
-	}	
-	//setRadians(getRadians()+0.01);
+
+	Entity::update(frameTime);
+	spriteData.x += frameTime * velocity.x;							// move ship along X 
+	spriteData.y += frameTime * velocity.y;						   // move ship along Y
 }

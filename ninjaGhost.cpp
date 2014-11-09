@@ -47,8 +47,18 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	if(!PlatformTM.initialize(graphics, "images\\platform.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform texture"));
-	if(!platform.initialize(this, Platformns::WIDTH, Platformns::HEIGHT, 0, &PlatformTM))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform"));
+	
+	for (int i=0;i<NUM_PLATFORMS;i++){
+		if(!platforms[i].initialize(this, Platformns::WIDTH, Platformns::HEIGHT, 0, &PlatformTM))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform"));
+	}
+
+	platforms[0].setY(GAME_HEIGHT-250);
+	platforms[1].setY(GAME_HEIGHT-50);
+	platforms[1].setX(0);
+	platforms[2].setY(GAME_HEIGHT-50);
+	platforms[3].setY(GAME_HEIGHT-50);
+	platforms[3].setX(GAME_WIDTH-platforms[3].getWidth()*platforms[3].getScale());
 
 	if(!GuardTM.initialize(graphics, "images\\guard.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard texture"));
@@ -201,9 +211,8 @@ void NinjaGhost::update()
 			testDummy.setActive(true);
 		testDummy.update(frameTime);
 
-		player.update(frameTime);
+		player.update(frameTime, platforms);
 		katana.update(frameTime);
-		platform.update(frameTime);
 		timeSinceThrow += frameTime;
 		if(timeSinceThrow >= 100)
 			timeSinceThrow = 30;
@@ -249,7 +258,8 @@ void NinjaGhost::render()
 		if(testDummy.getActive())
 			testDummy.draw();
 
-		platform.draw();
+		for (int i=0;i<NUM_PLATFORMS;i++)
+			platforms[i].draw();
 		player.draw();
 		if(katana.getActive())
 		{
@@ -285,7 +295,22 @@ void NinjaGhost::collisions()
 {
 	if(gameState == LEVEL1 || gameState == LEVEL2)
 	{
+
 		collisionVec = VECTOR2(0,0);
+	
+		for (int i=0;i<NUM_PLATFORMS;i++){
+			if(player.collidesWith(platforms[i], collisionVec)){
+				if (player.getVelocity().y >0){
+					if (player.getY()+player.getHeight()*player.getScale() < platforms[i].getY()+platforms[i].getHeight()*platforms[i].getScale()){
+						player.setY(platforms[i].getY()-player.getHeight()*player.getScale());
+						VECTOR2 tempv = player.getVelocity();
+						tempv.y = 0;
+						player.setVelocity(tempv);
+					}
+				}
+			}
+		}
+
 		if(katana.getActive() && katana.collidesWith(testDummy,collisionVec))
 		{
 			testDummy.setActive(false);
