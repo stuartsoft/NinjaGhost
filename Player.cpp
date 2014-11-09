@@ -42,7 +42,7 @@ float Player::getfloatoffset(){
 	return floatoffset;
 }
 
-void Player::update(float frameTime, Platform platforms[],int YOffset){
+void Player::update(float frameTime, Platform platforms[]){
 	D3DXVECTOR2 inputDir(0,0);
 	if (input->isKeyDown(0x41)){//left
 		inputDir.x = -1;
@@ -136,5 +136,5 @@ void Player::update(float frameTime, Platform platforms[],int YOffset){
 
 	Entity::update(frameTime);
 	spriteData.x += frameTime * velocity.x;							// move ship along X 
-	spriteData.y += frameTime * velocity.y + YOffset;						   // move ship along Y
+	spriteData.y += frameTime * velocity.y;						   // move ship along Y
 }

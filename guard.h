@@ -46,7 +46,7 @@ public:
 	Guard();
 	direction FacingDir();
 	void Guard::draw();
-	void Guard::update(float frameTime, int yOffset);
+	void Guard::update(float frameTime);
 	void Guard::ai();
 
 	void gunInit(TextureManager* gunTM);

@@ -16,7 +16,7 @@ private:
 public:
 	Platform();
 	void Platform::draw();
-	void Platform::update(float frameTime, int YOffset);
+	void Platform::update(float frameTime);
 };
 
 #endif

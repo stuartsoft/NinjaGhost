@@ -159,7 +159,6 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	//var init
 	timeSinceThrow = 0;
-
 	return;
 }
 
@@ -178,6 +177,7 @@ void NinjaGhost::reset()
 //=================================
 void NinjaGhost::LoadLevel1()
 {
+	guards[1].setActive(false);
 	//position platforms
 	YOffset = 0;
 	player.setX(0);
@@ -261,23 +261,26 @@ void NinjaGhost::update()
 		}
 		break;
 	case LEVEL1:
+		player.update(frameTime, platforms);
+		VECTOR2 tempv(0,0);
+
+		if( (player.getCenter()->y > GAME_HEIGHT*2/3) && player.getVelocity().y >0){
+			tempv.y = -player.getVelocity().y;
+		}
+		else if(player.getCenter()->y < GAME_HEIGHT/3 && player.getVelocity().y<0){
+			tempv.y = -player.getVelocity().y;
+		}
+		player.setY(player.getY() +tempv.y*frameTime);
 
 		if(input->isKeyDown(ENTER_KEY))
 			guards[1].setActive(true);
-		guards[1].update(frameTime, YOffset);
-		
-		if (player.getCenter()->y < GAME_HEIGHT/3)//up
-			YOffset = -player.getVelocity().y*frameTime;
-		else if (player.getCenter()->y > GAME_HEIGHT*2/3)
-			YOffset = -player.getVelocity().y*frameTime;
-		else
-			YOffset = 0;
+		guards[1].update(frameTime);
 
 		for (int i=0;i<NUM_PLATFORMS;i++){
-			platforms[i].update(frameTime,YOffset);
+			platforms[i].setVelocity(tempv);
+			platforms[i].update(frameTime);
 		}
 
-		player.update(frameTime, platforms, YOffset);
 		katana.update(frameTime);
 		timeSinceThrow += frameTime;
 		if(timeSinceThrow >= 100)

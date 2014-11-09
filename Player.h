@@ -26,7 +26,7 @@ public:
 	direction FacingDir();
 	float getfloatoffset();
 	void Player::draw();
-	void Player::update(float frameTime, Platform platforms[], int YOffset);
+	void Player::update(float frameTime, Platform platforms[]);
 };
 
 #endif

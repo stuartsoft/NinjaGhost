@@ -53,10 +53,9 @@ void Guard::initializePatrol(Platform* plat, Entity* t)
 	target = t;
 }
 
-void Guard::update(float frameTime, int yOffset){
+void Guard::update(float frameTime){
 	Entity::update(frameTime);
 	spriteData.x += frameTime * velocity.x;
-	spriteData.y += yOffset;
 
 	setFrameDelay(0.25);
 
