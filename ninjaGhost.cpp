@@ -70,7 +70,7 @@ void NinjaGhost::initialize(HWND hwnd)
 	if(!PlatformTM.initialize(graphics, "images\\platform.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform texture"));
 	
-	for (int i=0;i<NUM_PLATFORMS;i++){
+	for (int i=0;i<MAX_PLATFORMS;i++){
 		if(!platforms[i].initialize(this, Platformns::WIDTH, Platformns::HEIGHT, 0, &PlatformTM))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform"));
 	}
@@ -79,6 +79,8 @@ void NinjaGhost::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard texture"));
 	if(!GunTM.initialize(graphics, "images\\katana.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init gun texture"));
+	if(!BulletTM.initialize(graphics, "images\\shuriken.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init bullet texture"));
 
 	for(int i=0; i<MAX_GUARDS; i++)
 	{
@@ -87,8 +89,9 @@ void NinjaGhost::initialize(HWND hwnd)
 		guards[i].setX(0);
 		guards[i].setY(0);
 		guards[i].gunInit(&GunTM);
+
 	}
-	
+
 	if(!KatanaTM.initialize(graphics, KATANA_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana texture"));
 	if(!katana.initialize(this, katanaNS::WIDTH, katanaNS::HEIGHT, 0, &KatanaTM))
@@ -184,7 +187,7 @@ void NinjaGhost::LoadLevel1()
 	player.setY(0);
 	ifstream myfile("Levels\\L1.txt");
 	if (myfile.is_open()){
-		for (int i=0;i<NUM_PLATFORMS;i++){
+		for (int i=0;i<LEVEL1_PLATFORMS;i++){
 			string line;
 			getline(myfile,line);
 			int x,y;
@@ -192,11 +195,15 @@ void NinjaGhost::LoadLevel1()
 			y = atoi(strtok(NULL,","));
 			platforms[i].setX(x);
 			platforms[i].setY(y);
+			platforms[i].setActive(true);
 		}
 	}
 	myfile.close();
 
-	guards[1].initializePatrol(&platforms[1], &player);
+	for(int i=0; i<LEVEL_GUARDS(); i++)
+	{
+		guards[i].initializePatrol(&platforms[1], &player);
+	}
 }
 
 
@@ -244,7 +251,6 @@ void NinjaGhost::gameStateUpdate()
 //=============================================================================
 void NinjaGhost::update()
 {
-	
 	gameStateUpdate();
 	if(input->isKeyDown(ESC_KEY))
 	{
@@ -261,11 +267,16 @@ void NinjaGhost::update()
 		}
 		break;
 	case LEVEL1:
+	case LEVEL2:
 
 		if(input->isKeyDown(ENTER_KEY))
-			guards[1].setActive(true);
-		guards[1].update(frameTime, YOffset);
-		
+			guards[0].setActive(true);
+
+		for(int i=0; i<LEVEL_GUARDS(); i++)
+		{
+			guards[i].update(frameTime, YOffset);
+		}
+
 		if (player.getCenter()->y < GAME_HEIGHT/3)//up
 			YOffset = -player.getVelocity().y*frameTime;
 		else if (player.getCenter()->y > GAME_HEIGHT*2/3)
@@ -273,7 +284,7 @@ void NinjaGhost::update()
 		else
 			YOffset = 0;
 
-		for (int i=0;i<NUM_PLATFORMS;i++){
+		for (int i=0;i<LEVEL_PLATFORMS();i++){
 			platforms[i].update(frameTime,YOffset);
 		}
 
@@ -309,7 +320,6 @@ void NinjaGhost::render()
 {
 	graphics->spriteBegin();
 	
-
 	switch(gameState)
 	{
 	case MAIN_MENU:
@@ -320,13 +330,18 @@ void NinjaGhost::render()
 		Level1Splash.draw();
 		break;
 	case LEVEL1:
+	case LEVEL2:
 		Backgroundimg[0].draw();
 		
-		if(guards[1].getActive())
-			guards[1].draw();
+		for(int i=0; i<LEVEL_GUARDS(); i++)
+		{
+			guards[i].draw();
+		}
 
-		for (int i=0;i<NUM_PLATFORMS;i++)
+		for (int i=0;i<LEVEL_PLATFORMS();i++)
+		{
 			platforms[i].draw();
+		}
 		player.draw();
 		if(katana.getActive())
 		{
@@ -359,6 +374,26 @@ void NinjaGhost::render()
 	graphics->spriteEnd();
 }
 
+
+//=============================
+// handles entity ai
+//=============================
+void NinjaGhost::ai()
+{
+	switch(gameState)
+	{
+	case LEVEL1:
+	case LEVEL2:
+		for(int i=0; i<LEVEL_GUARDS(); i++)
+		{
+			if(guards[i].getActive())
+			{
+				guards[i].ai();
+			}
+		}
+	}
+}
+
 //==================================================================
 // Handle collision between entities
 //==================================================================
@@ -366,10 +401,9 @@ void NinjaGhost::collisions()
 {
 	if(gameState == LEVEL1 || gameState == LEVEL2)
 	{
-
 		collisionVec = VECTOR2(0,0);
 	
-		for (int i=0;i<NUM_PLATFORMS;i++){
+		for (int i=0;i<LEVEL_PLATFORMS();i++){
 			if(player.collidesWith(platforms[i], collisionVec)){
 				if (player.getVelocity().y >0){
 					if (player.getY()+player.getHeight()*player.getScale() < platforms[i].getY()+platforms[i].getHeight()*platforms[i].getScale()){
@@ -382,23 +416,33 @@ void NinjaGhost::collisions()
 			}
 		}
 
-		if(katana.getActive() && katana.collidesWith(guards[1],collisionVec))
+		for(int i=0; i<LEVEL_GUARDS(); i++)
 		{
-			guards[1].setActive(false);
-		}
-		for(int i=0; i<MAX_SHURIKEN; i++)
-		{
-			if(shuriken[i].getActive() && shuriken[i].collidesWith(guards[1],collisionVec))
+			if(guards[i].getActive())
 			{
-				guards[1].setActive(false);
-				shuriken[i].setActive(false);
+				if(katana.getActive() && katana.collidesWith(guards[i],collisionVec))
+				{
+					guards[i].setActive(false);
+					
+				}
+				
+				if(player.collidesWith(guards[i],collisionVec))
+				{
+					player.setHealth(player.getHealth()-guardNS::COLLISION_DAMAGE);
+				}
+	
+				for(int j=0; j<MAX_SHURIKEN; j++)
+				{
+					if(shuriken[j].getActive() && shuriken[j].collidesWith(guards[i],collisionVec))
+					{
+						guards[i].setActive(false);
+						shuriken[j].setActive(false);
+					}
+				}
+
 			}
 		}
-		if(player.collidesWith(guards[1],collisionVec))
-		{
-			gameState = GAME_OVER;
-			timeInState = 0;
-		}
+	
 	}
 }
 
@@ -425,7 +469,6 @@ void NinjaGhost::spawnShuriken(VECTOR2 pos, VECTOR2 vel)
 	}
 }
 
-
 //=============================================================================
 // The graphics device was lost.
 // Release all reserved video memory so graphics device may be reset.
@@ -439,6 +482,7 @@ void NinjaGhost::releaseAll()
 	GuardTM.onLostDevice();
 	KatanaTM.onLostDevice();
 	ShurikenTM.onLostDevice();
+	BulletTM.onLostDevice();
 	GunTM.onLostDevice();
 	PlayerTextureManager.onLostDevice();
 	MainMenuSplashTM.onLostDevice();
@@ -466,6 +510,7 @@ void NinjaGhost::resetAll()
 	KatanaTM.onResetDevice();
 	ShurikenTM.onResetDevice();
 	GunTM.onResetDevice();
+	BulletTM.onResetDevice();
 	PlayerTextureManager.onResetDevice();
 	MainMenuSplashTM.onResetDevice();
 	Level1SplashTM.onResetDevice();

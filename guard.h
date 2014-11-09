@@ -4,6 +4,7 @@
 
 #include "entity.h"
 #include "platform.h"
+#include "bullet.h"
 
 namespace guardNS
 {
@@ -13,19 +14,26 @@ namespace guardNS
     const int Y = GAME_HEIGHT/2 - HEIGHT/2;
     const float MASS = 300.0f;              // mass
 	const float MAX_HEALTH = 4.0f;
-	const int SPEED = 300;
+	const int SPEED = 200;
+	const int FLEE_SPEED = 400;
 	const int MAX_SPEED_X = 750;
 	const int MAX_SPEED_Y = 1000;
 	const float SCALE = 1.0;
 
-	const int GUN_WIDTH = 128;
-	const int GUN_HEIGHT = 32;
-	const float GUN_SCALE = 1.0;
-
 	const float PATROL_PERCENT = .8;
 
-	const float FLEE_DIST = GAME_WIDTH/5;
-	const float ATTACK_DIST = GAME_WIDTH/2;
+	const float FLEE_DIST = GAME_WIDTH/4;
+	const float ATTACK_DIST = GAME_WIDTH/3;
+
+	const int COLLISION_DAMAGE = 10;
+
+}
+
+namespace gunNS
+{
+	const int WIDTH = 149;
+	const int HEIGHT = 8;
+	const float SCALE = 1.0;
 }
 
 class Guard: public Entity{
@@ -39,6 +47,9 @@ private:
 	
 	Entity* target;
 	float dist;
+	VECTOR2 distVec;
+	bool targetAquired;
+	float targetAngle;
 
 	Image gun;
 
@@ -52,6 +63,10 @@ public:
 	void gunInit(TextureManager* gunTM);
 	void setTarget();
 	void initializePatrol(Platform* plat, Entity* t);
+
+	Bullet bullets[BULLETS_PER_GUARD];
+	void bulletsInit(TextureManager* bulletTM, Game* g);
+
 };
 
 #endif

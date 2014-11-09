@@ -76,7 +76,8 @@ void Player::update(float frameTime, Platform platforms[],int YOffset){
 	}
 
 	BOOL StandingOnPlatform = FALSE;
-	for (int i=0;i<NUM_PLATFORMS;i++){
+	for (int i=0;i<MAX_PLATFORMS;i++){
+		if(platforms[i].getActive())
 		if (platforms[i].getY() == getY() + getHeight()*getScale()){
 			if(getCenter()->x + edge.left < platforms[i].getX()+platforms[i].getWidth()*platforms[i].getScale() && getCenter()->x + edge.right > platforms[i].getX()){
 				deltaV.y = 0;

@@ -1,6 +1,7 @@
 #include "guard.h"
 
-Guard::Guard(){
+Guard::Guard()
+{
 	spriteData.width = guardNS::WIDTH;           // size of Ship1
 	spriteData.height = guardNS::HEIGHT;
 	spriteData.x = guardNS::X;                   // location on screen
@@ -11,7 +12,7 @@ Guard::Guard(){
 	velocity.y = 0;                             // velocity Y
 	radius = guardNS::WIDTH/2.0;
 	mass = guardNS::MASS;
-	collisionType = entityNS::CIRCLE;
+	collisionType = entityNS::BOX;
 	setHealth(guardNS::MAX_HEALTH);
 	health = guardNS::MAX_HEALTH;
 	facingDir = right;
@@ -23,18 +24,39 @@ Guard::Guard(){
 	edge.bottom = guardNS::HEIGHT/2;
 
 	dist = 0;
+	target = nullptr;
+	targetAquired = false;
 }
 
 void Guard::gunInit(TextureManager* gunTM)
 {
-	if(!gun.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, gunTM))
-		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init level2 splash image"));
+	if(!gun.initialize(graphics, gunNS::WIDTH, gunNS::HEIGHT, 0, gunTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init gun image"));
+}
+
+void Guard::bulletsInit(TextureManager* bulletTM, Game* g)
+{
+	for(int i=0; i<BULLETS_PER_GUARD; i++)
+	{
+		if(!bullets[i].initialize(g, bulletNS::WIDTH, bulletNS::HEIGHT, 0, bulletTM))
+			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init bullets"));
+	}
 }
 
 void Guard::draw()
 {
-	Image::draw();
-	gun.draw();
+	if(active)
+	{
+		Image::draw();
+		gun.draw();
+	}
+	for(int i=0; i<BULLETS_PER_GUARD; i++)
+	{
+		if(bullets[i].getActive())
+		{
+			bullets[i].draw();
+		}
+	}
 }
 
 direction Guard::FacingDir()
@@ -58,81 +80,74 @@ void Guard::update(float frameTime, int yOffset){
 	spriteData.x += frameTime * velocity.x;
 	spriteData.y += yOffset;
 
+	if(spriteData.x >= patrolAnchor + Platformns::WIDTH/2)
+	{
+		spriteData.x = patrolAnchor + Platformns::WIDTH/2;
+	}
+	else if(spriteData.x <= patrolAnchor - Platformns::WIDTH/2)
+	{
+		spriteData.x = patrolAnchor - Platformns::WIDTH/2;
+	}
+
 	setFrameDelay(0.25);
 
 	if(facingDir == right)
 	{
 		gun.setCurrentFrame(0);
-		gun.setX(getCenterX()+getScale()*guardNS::WIDTH/4-guardNS::GUN_WIDTH*guardNS::GUN_SCALE/2);
+		gun.setX(getCenterX()+getScale()*guardNS::WIDTH/4-gunNS::WIDTH*gunNS::SCALE/2);
 		gun.setY(getCenterY());
-		setDegrees(0);
+		setRadians(0);
 	}
 	if(facingDir == left)
 	{
 		gun.setCurrentFrame(1);
-		gun.setX(getCenterX()-getScale()*guardNS::WIDTH/4-guardNS::WIDTH*guardNS::GUN_SCALE/2);
+		gun.setX(getCenterX()-getScale()*guardNS::WIDTH/4-gunNS::WIDTH*gunNS::SCALE/2);
 		gun.setY(getCenterY());
-		setDegrees(0);
+		setRadians(0);
 	}
-
-	if(patrolDir == left)
-	{
-		velocity.x = -guardNS::SPEED;
-		facingDir = left;
-	}
-	else if(patrolDir == right)
-	{
-		velocity.x = guardNS::SPEED;
-		facingDir = right;
-	}
-	if(spriteData.x >= patrolAnchor + patrolWidth)
-	{
-		patrolDir = left;
-	}
-	else if(spriteData.x <= patrolAnchor - patrolWidth)
-	{
-		patrolDir = right;
-	}
-
-	if (spriteData.x + 2*radius*getScale() < 0)	//left edge
-		spriteData.x = GAME_WIDTH;
-	else if (spriteData.x > GAME_WIDTH)			//right edge
-		spriteData.x = -2*radius*getScale();
-	
 }
 
 void Guard::ai()
 {
-	dist = D3DXVec2LengthSq(&(VECTOR2(target->getX(),target->getY()) - VECTOR2(spriteData.x,spriteData.y)));
-	
+	distVec = VECTOR2(target->getCenterX(),target->getCenterY()) - VECTOR2(getCenterX(),getCenterY());
+	dist = D3DXVec2Length(&distVec);
+
 	if(dist < guardNS::FLEE_DIST)				//FLEE
 	{
 		if((spriteData.x-target->getX()) > 0)
 		{
-			velocity.x = guardNS::SPEED;
+			velocity.x = guardNS::FLEE_SPEED;
 			facingDir = right;
 		}
 		else
 		{
-			velocity.x = -guardNS::SPEED;
+			velocity.x = -guardNS::FLEE_SPEED;
 			facingDir = left;
 		}
 	}
 	else if(dist < guardNS::ATTACK_DIST)		//ATTACK
 	{
-		if((spriteData.x-target->getX()) > 0)
+		velocity.x = 0;
+	}
+	else 										//PATROL
+	{
+		if(patrolDir == left)
 		{
 			velocity.x = -guardNS::SPEED;
 			facingDir = left;
+			if(spriteData.x <= patrolAnchor - patrolWidth)
+			{
+				patrolDir = right;
+			}
 		}
-		else
+		else if(patrolDir == right)
 		{
 			velocity.x = guardNS::SPEED;
 			facingDir = right;
+			if(spriteData.x >= patrolAnchor + patrolWidth)
+			{
+				patrolDir = left;
+			}
 		}
-	}
-	else										//PATROL
-	{
-		
 	}
 }

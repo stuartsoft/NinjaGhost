@@ -17,6 +17,10 @@
 #include "shuriken.h"
 #include "platform.h"
 #include "guard.h"
+#include "bullet.h"
+
+#define LEVEL_GUARDS() ((gameState == LEVEL1) ? LEVEL1_GUARDS : LEVEL2_GUARDS)
+#define LEVEL_PLATFORMS() ((gameState == LEVEL1) ? LEVEL1_PLATFORMS : LEVEL2_PLATFORMS)
 
 class NinjaGhost : public Game
 {
@@ -24,7 +28,7 @@ private:
 	// game items
 	int YOffset;
 	Player player;
-	Platform platforms[NUM_PLATFORMS];
+	Platform platforms[MAX_PLATFORMS];
 	Image Backgroundimg[2];
 	Image BlackBoarders;
 	Image RedBoarders;
@@ -38,6 +42,7 @@ private:
 	TextureManager PlayerTextureManager;
 	TextureManager KatanaTM;
 	TextureManager ShurikenTM;
+	TextureManager BulletTM;
 	TextureManager PlatformTM;
 	TextureManager GunTM;
 	
@@ -69,9 +74,9 @@ private:
 	TextDX *gameCompleteFont2;
 
 	// STATE STUFF
-	GameStates gameState;
 	float timeInState;
 	void gameStateUpdate();
+	GameStates gameState;
 
 	void LoadLevel1();
 
@@ -84,7 +89,7 @@ public:
 	void initialize(HWND hwnd);
 	void reset();
 	void update();
-	void ai() {};
+	void ai();
 	void collisions();
 	void render();
 	void releaseAll();

@@ -41,12 +41,16 @@ const float MIN_FRAME_RATE = 10.0f;             // the minimum frame rate
 const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 frame
 const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
 
-const int NUM_PLATFORMS = 10;
+const int MAX_PLATFORMS = 30;
 const int MAX_SHURIKEN = 5;
 const int MAX_GUARDS = 25;
+const int BULLETS_PER_GUARD = 15;
 
-const int LEVEL1_GUARDS = 10;
+const int LEVEL1_GUARDS = 1;
 const int LEVEL2_GUARDS = 15;
+
+const int LEVEL1_PLATFORMS = 10;
+const int LEVEL2_PLATFORMS = 20;
 
 const float THROW_COOLDOWN = 1.2;
 const float KATANA_COOLDOWN = 0.7;
