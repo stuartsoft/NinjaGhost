@@ -77,10 +77,14 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	if(!GuardTM.initialize(graphics, "images\\guard.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard texture"));
-	if(!testDummy.initialize(this, guardNS::WIDTH, guardNS::HEIGHT, 2, &GuardTM))
-		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard"));
-	testDummy.setX(3*GAME_WIDTH/4);
-	testDummy.setY(GAME_HEIGHT/2);
+
+	for(int i=0; i<MAX_GUARDS; i++)
+	{
+		if(!guards[i].initialize(this, guardNS::WIDTH, guardNS::HEIGHT, 2, &GuardTM))
+			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard"));
+		guards[i].setX(0);
+		guards[i].setY(0);
+	}
 	
 	if(!KatanaTM.initialize(graphics, KATANA_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init katana texture"));
@@ -165,7 +169,10 @@ void NinjaGhost::reset()
 void NinjaGhost::LoadLevel1()
 {
 	//position platforms
-	testDummy.setActive(false);
+	guards[1].initializePatrol(3*GAME_WIDTH/4, GAME_WIDTH/5);
+	guards[1].setX(GAME_WIDTH/2);
+	guards[1].setY(0);
+
 	YOffset = 0;
 	player.setX(0);
 	player.setY(0);
@@ -182,7 +189,6 @@ void NinjaGhost::LoadLevel1()
 		}
 	}
 	myfile.close();
-	testDummy.initializePatrol(3*GAME_WIDTH/4, GAME_WIDTH/5);
 }
 
 
@@ -239,8 +245,8 @@ void NinjaGhost::update()
 	case LEVEL1:
 
 		if(input->isKeyDown(ENTER_KEY))
-			testDummy.setActive(true);
-		testDummy.update(frameTime);
+			guards[1].setActive(true);
+		guards[1].update(frameTime);
 
 		if (player.getCenter()->y < GAME_HEIGHT/3)//up
 			YOffset = -player.getVelocity().y*frameTime;
@@ -298,8 +304,9 @@ void NinjaGhost::render()
 	case LEVEL1:
 		Backgroundimg[0].draw();
 
-		if(testDummy.getActive())
-			testDummy.draw();
+
+		if(guards[1].getActive())
+			guards[1].draw();
 
 		for (int i=0;i<NUM_PLATFORMS;i++)
 			platforms[i].draw();
@@ -355,19 +362,19 @@ void NinjaGhost::collisions()
 			}
 		}
 
-		if(katana.getActive() && katana.collidesWith(testDummy,collisionVec))
+		if(katana.getActive() && katana.collidesWith(guards[1],collisionVec))
 		{
-			testDummy.setActive(false);
+			guards[1].setActive(false);
 		}
 		for(int i=0; i<MAX_SHURIKEN; i++)
 		{
-			if(shuriken[i].getActive() && shuriken[i].collidesWith(testDummy,collisionVec))
+			if(shuriken[i].getActive() && shuriken[i].collidesWith(guards[1],collisionVec))
 			{
-				testDummy.setActive(false);
+				guards[1].setActive(false);
 				shuriken[i].setActive(false);
 			}
 		}
-		if(player.collidesWith(testDummy,collisionVec))
+		if(player.collidesWith(guards[1],collisionVec))
 		{
 			gameState = GAME_OVER;
 			timeInState = 0;

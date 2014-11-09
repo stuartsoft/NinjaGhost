@@ -29,7 +29,7 @@ private:
 	Image BlackBoarders;
 	Image RedBoarders;
 
-	Guard testDummy;
+	
 	TextureManager GuardTM;
 
 	TextureManager BackgroundTM;
@@ -43,6 +43,8 @@ private:
 	Katana katana;
 	Shuriken shuriken[MAX_SHURIKEN];
 	
+	Guard guards[MAX_GUARDS];
+
 	// game variables
 	float timeSinceThrow;
 	VECTOR2 collisionVec;
