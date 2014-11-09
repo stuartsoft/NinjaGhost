@@ -11,7 +11,13 @@ Player::Player(){
 	velocity.y = 0;                             // velocity Y
 	radius = Playerns::WIDTH/2.0;
 	mass = Playerns::MASS;
-	collisionType = entityNS::CIRCLE;
+
+	edge.top = -Playerns::HEIGHT/2;
+	edge.bottom = Playerns::HEIGHT/2;
+	edge.left = -54;
+	edge.right = 20;
+	collisionType = entityNS::BOX;
+
 	setHealth(Playerns::MAX_HEALTH);
 	health = Playerns::MAX_HEALTH;
 	playerdir = right;
@@ -41,6 +47,8 @@ void Player::update(float frameTime, Platform platforms[]){
 	if (input->isKeyDown(0x41)){//left
 		inputDir.x = -1;
 		setFrames(4,7);
+		edge.left = -20;
+		edge.right = 54;
 		if(playerdir!=left){
 			playerdir = left;
 			setCurrentFrame(4);
@@ -50,6 +58,8 @@ void Player::update(float frameTime, Platform platforms[]){
 	else if (input->isKeyDown(0x44)){//right
 		inputDir.x = 1;
 		setFrames(0,3);
+		edge.left = -54;
+		edge.right = 20;
 		if(playerdir != right){
 			playerdir = right;
 			setCurrentFrame(0);
@@ -68,7 +78,7 @@ void Player::update(float frameTime, Platform platforms[]){
 	BOOL StandingOnPlatform = FALSE;
 	for (int i=0;i<NUM_PLATFORMS;i++){
 		if (platforms[i].getY() == getY() + getHeight()*getScale()){
-			if(getX() < platforms[i].getX()+platforms[i].getWidth()*platforms[i].getScale() && getX()+getWidth()*getScale() > platforms[i].getX()){
+			if(getCenter()->x + edge.left < platforms[i].getX()+platforms[i].getWidth()*platforms[i].getScale() && getCenter()->x + edge.right > platforms[i].getX()){
 				deltaV.y = 0;
 				velocity.y = 0;
 				StandingOnPlatform = TRUE;
