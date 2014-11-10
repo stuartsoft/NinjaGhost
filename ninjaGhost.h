@@ -90,7 +90,7 @@ private:
 
 	TextDX *gameCompleteFont1;
 	TextDX *gameCompleteFont2;
-
+	
 	TextDX *cheatFont;
 
 	COLOR_ARGB healthFilter;
