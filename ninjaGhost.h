@@ -64,7 +64,8 @@ private:
 
 	int ammo;
 	int score;
-	
+	int lives;
+
 	bool flinch;
 	float flinchTime;
 	bool Invincibility;

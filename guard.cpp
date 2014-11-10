@@ -138,7 +138,7 @@ void Guard::update(float frameTime){
 	if(facingDir == right)
 	{
 		gun.setX(getCenterX()+getScale()*guardNS::WIDTH/4-gunNS::WIDTH*gunNS::SCALE/2);
-		gun.setY(getCenterY());
+		gun.setY(getCenterY()+5);
 		gun.setCurrentFrame(1);
 		gun.setRadians(0);
 	}
@@ -146,7 +146,7 @@ void Guard::update(float frameTime){
 	{
 		
 		gun.setX(getCenterX()-getScale()*guardNS::WIDTH/4-gunNS::WIDTH*gunNS::SCALE/2);
-		gun.setY(getCenterY());
+		gun.setY(getCenterY()+5);
 		gun.setCurrentFrame(2);
 		gun.setRadians(0);
 	}
@@ -164,7 +164,7 @@ void Guard::ai()
 
 	if(dist < guardNS::FLEE_DIST)				//FLEE
 	{
-		if((spriteData.x-target->getX()) > 0)
+		if((getCenterX()-target->getX()) > 0)
 		{
 			velocity.x = guardNS::FLEE_SPEED;
 			facingDir = right;
@@ -174,6 +174,30 @@ void Guard::ai()
 			velocity.x = -guardNS::FLEE_SPEED;
 			facingDir = left;
 		}
+		if(getCenterX() >= patrolAnchor + Platformns::WIDTH/2)
+		{
+			spriteData.x = patrolAnchor + Platformns::WIDTH/2 - guardNS::WIDTH/2*guardNS::SCALE;
+			facingDir = left;
+			gun.setCurrentFrame(2);
+			gun.setRadians(-targetAngle+PI);
+			if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
+			{
+				spawnBullet(pos, dir*bulletNS::SPEED);
+				timeSinceShoot = 0;
+			}
+		}
+		else if(getCenterX() <= patrolAnchor - Platformns::WIDTH/2)
+		{
+			spriteData.x = patrolAnchor - Platformns::WIDTH/2 - guardNS::WIDTH/2*guardNS::SCALE;
+			facingDir = right;
+			gun.setCurrentFrame(1);
+			gun.setRadians(targetAngle+PI);
+			if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
+			{
+				spawnBullet(pos, dir*bulletNS::SPEED);
+				timeSinceShoot = 0;
+			}
+		}
 	}
 	else if(dist < guardNS::ATTACK_DIST)		//ATTACK
 	{
@@ -181,14 +205,15 @@ void Guard::ai()
 		if(dir.x < 0)
 		{
 			facingDir = left;
-			gun.setCurrentFrame(1);
+			gun.setCurrentFrame(2);
+			gun.setRadians(-targetAngle+PI);
 		}
 		else
 		{
 			facingDir = right;
-			gun.setCurrentFrame(0);
+			gun.setCurrentFrame(1);
+			gun.setRadians(targetAngle+PI);
 		}
-		gun.setRadians(targetAngle);
 		if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
 		{
 			spawnBullet(pos, dir*bulletNS::SPEED);
