@@ -1,6 +1,5 @@
 #include "shuriken.h"
 
-
 Shuriken::Shuriken() : Entity()
 {
 	spriteData.width = shurikenNS::WIDTH;           // size of Ship1

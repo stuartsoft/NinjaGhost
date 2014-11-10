@@ -100,6 +100,7 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="katana.cpp" />
+    <ClCompile Include="life.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="patternStep.cpp" />
     <ClCompile Include="platform.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="katana.h" />
+    <ClInclude Include="life.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="patternStep.h" />
     <ClInclude Include="platform.h" />

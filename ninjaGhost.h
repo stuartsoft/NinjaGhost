@@ -18,6 +18,7 @@
 #include "platform.h"
 #include "guard.h"
 #include "bullet.h"
+#include "life.h"
 #include <sstream>
 
 #define LEVEL_GUARDS() ((gameState == LEVEL1) ? LEVEL1_GUARDS : LEVEL2_GUARDS)
@@ -65,7 +66,8 @@ private:
 	int ammo;
 	int score;
 	int lives;
-
+	Life liveCounter[MAX_LIVES];
+	
 	bool flinch;
 	float flinchTime;
 	bool Invincibility;

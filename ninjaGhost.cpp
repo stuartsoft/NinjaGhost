@@ -53,6 +53,12 @@ void NinjaGhost::initialize(HWND hwnd)
 	player.setCurrentFrame(0);
 	player.setFrameDelay(0.33);
 
+	for(int i=0; i<MAX_LIVES; i++)
+	{
+		if(!liveCounter[i].initialize(this, lifeNS::WIDTH, lifeNS::HEIGHT, 2, &PlayerTextureManager))
+			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init live counter"));
+	}
+
 	if(!BackgroundTM.initialize(graphics, "images\\background.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init background texture"));
 
@@ -266,6 +272,11 @@ void NinjaGhost::LoadLevel()
 	{
 		shurikenIndicator[i].setX(GAME_WIDTH/2 + shurikenNS::WIDTH*(i-2));
 		shurikenIndicator[i].setY(0);
+	}
+	for(int i=0; i<MAX_LIVES; i++)
+	{
+		liveCounter[i].setX(GAME_WIDTH - lifeNS::WIDTH*lifeNS::SCALE*(i+1));
+		liveCounter[i].setY(0);
 	}
 
 	//position platforms
@@ -580,6 +591,10 @@ void NinjaGhost::render()
 		}
 		BlackBoarders.draw();
 		RedBoarders.draw(healthFilter);
+		for(int i=0; i<min(lives,MAX_LIVES) && i>=0; i++)
+		{
+			liveCounter[i].draw();
+		}
 
 		if(gameState == GAME_OVER)
 		{
