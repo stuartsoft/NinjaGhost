@@ -112,9 +112,9 @@ void Player::update(float frameTime, Platform platforms[]){
 		deltaV.x = 0;
 	}
 	else if (inputDir.x ==0 && velocity.x > 0)
-		deltaV.x-=1.5;
+		deltaV.x-=4.0;
 	else if(inputDir.x ==0 && velocity.x < 0)
-		deltaV.x+=2.5;
+		deltaV.x+=4.0;
 
 	//====================Floating animation
 	if (floatdir == up)

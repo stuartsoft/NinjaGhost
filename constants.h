@@ -57,11 +57,13 @@ const float KATANA_COOLDOWN = 0.7;
 
 const int STARTING_LIVES = 3;
 const int MAX_AMMO = 5;
+
 const int AMMO_PER_MELEE_KILL = 2;
 const int AMMO_PER_RANGED_KILL = 1;
-
 const int SCORE_PER_MELEE_KILL = 100;
 const int SCORE_PER_RANGED_KILL = 50;
+const float HEALTH_PER_MELEE_KILL = 50.0f;
+const float HEALTH_PER_RANGED_KILL = 25.0f;
 
 // audio files
 const char WAVE_BANK[] = "";

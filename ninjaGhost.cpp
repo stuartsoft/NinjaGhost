@@ -175,7 +175,6 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	//var init
 	timeSinceThrow = 0;
-	lives = STARTING_LIVES;
 	ammo = MAX_AMMO;
 	score = 0;
 
@@ -198,7 +197,6 @@ void NinjaGhost::reset()
 	player.setY(0);
 	player.setVelocity(VECTOR2(0,0));
 	ammo = MAX_AMMO;
-	lives = STARTING_LIVES;
 	score = 0;
 	
 	for(int i=0; i<MAX_GUARDS; i++)
@@ -267,8 +265,8 @@ void NinjaGhost::LoadLevel()
 			platforms[i].setY(y);
 			platforms[i].setActive(true);
 		}
-		LevelExit.setX(platforms[0].getCenterX()-32);
-		LevelExit.setY(platforms[0].getY()-128);
+		LevelExit.setX(platforms[LEVEL_PLATFORMS()-1].getCenterX()-32);
+		LevelExit.setY(platforms[LEVEL_PLATFORMS()-1].getY()-128);
 		LevelExit.setActive(true);
 		for(int i=0; i<LEVEL_GUARDS(); i++)
 		{
@@ -377,21 +375,15 @@ void NinjaGhost::update()
 		break;
 	case LEVEL1:
 	case LEVEL2:
-
 		if(player.getHealth() <= 0)
 		{
-			lives--;
-			if(lives <= 0)
-			{
-				gameState = GAME_OVER;
-				timeInState = 0;
-			}
-			else
-			{
-				
-
-			}
+			gameState = GAME_OVER;
+			timeInState = 0;
 		}
+
+		player.getHealth()/Playerns::MAX_HEALTH;
+		
+		RedBoarders.setColorFilter(D3DCOLOR_ARGB(0,255,255,255));		
 
 		if(input->isKeyDown(ENTER_KEY))
 			guards[0].setActive(true);
@@ -506,11 +498,12 @@ void NinjaGhost::render()
 				shuriken[i].draw();
 			}
 		}
-		for(int i=0; i<ammo; i++)
+		for(int i=0; i<ammo && i>=0; i++)
 		{
 			shurikenIndicator[i].draw();
 		}
 		BlackBoarders.draw();
+		RedBoarders.draw();
 		break;
 	case GAME_OVER:
 		graphics->setBackColor(graphicsNS::BLACK);
@@ -581,6 +574,10 @@ void NinjaGhost::collisions()
 					player.setHealth(player.getHealth()-bulletNS::COLLISION_DAMAGE);
 					guards[i].bullets[j].setActive(false);
 				}
+				if(guards[i].bullets[j].getActive() && katana.getActive() && katana.collidesWith(guards[i].bullets[j],collisionVec))
+				{
+					guards[i].bullets[j].setActive(false);
+				}
 			}
 
 			if(guards[i].getActive())
@@ -589,6 +586,7 @@ void NinjaGhost::collisions()
 				{
 					guards[i].setActive(false);
 					score += SCORE_PER_MELEE_KILL;
+					player.setHealth(player.getHealth()+HEALTH_PER_MELEE_KILL);
 					if(!UnlimitedAmmo)
 						ammo += AMMO_PER_MELEE_KILL;
 				}
@@ -605,6 +603,7 @@ void NinjaGhost::collisions()
 						guards[i].setActive(false);
 						shuriken[j].setActive(false);
 						score += SCORE_PER_RANGED_KILL;
+						player.setHealth(player.getHealth()+HEALTH_PER_RANGED_KILL);
 						if(!UnlimitedAmmo)
 							ammo += AMMO_PER_RANGED_KILL;
 					}

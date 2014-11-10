@@ -59,7 +59,6 @@ private:
 	float timeSinceThrow;
 	VECTOR2 collisionVec;
 
-	int lives;
 	int ammo;
 	int score;
 	
@@ -94,6 +93,7 @@ private:
 	void LoadLevel();
 
 	float timeSinceMenuPress;
+	float flashTime;
 
 	// functs
 	void spawnShuriken(VECTOR2 pos, VECTOR2 vel);
