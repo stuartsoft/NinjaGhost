@@ -56,8 +56,7 @@ const float THROW_COOLDOWN = 1.2f;
 const float KATANA_COOLDOWN = 0.7f;
 const float FLINCH_DURATION = 0.5f;
 
-const int STARTING_LIVES = 3;
-const int MAX_AMMO = 5;
+const int MAX_LIVES = 3;
 
 const int AMMO_PER_MELEE_KILL = 2;
 const int AMMO_PER_RANGED_KILL = 1;

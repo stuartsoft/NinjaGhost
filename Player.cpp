@@ -105,7 +105,7 @@ void Player::update(float frameTime, Platform platforms[]){
 	inputDir.y *= 5;
 
 	if (inputDir.y !=0)
-		velocity.y = inputDir.y*215;
+		velocity.y = inputDir.y*180;
 
 	//speed cap
 	if(velocity.x> Playerns::MAX_SPEED_X)
@@ -121,9 +121,9 @@ void Player::update(float frameTime, Platform platforms[]){
 		deltaV.x = 0;
 	}
 	else if (inputDir.x ==0 && velocity.x > 0)
-		deltaV.x-=4.0;
+		deltaV.x-=5.0;
 	else if(inputDir.x ==0 && velocity.x < 0)
-		deltaV.x+=4.0;
+		deltaV.x+=5.0;
 
 	//====================Floating animation
 	if (floatdir == up)

@@ -182,8 +182,9 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	//var init
 	timeSinceThrow = 0;
-	ammo = MAX_AMMO;
+	ammo = MAX_SHURIKEN;
 	score = 0;
+	lives = MAX_LIVES;
 
 	flinch = false;
 
@@ -197,8 +198,9 @@ void NinjaGhost::initialize(HWND hwnd)
 
 void NinjaGhost::resetVars()
 {
-	ammo = MAX_AMMO;
+	ammo = MAX_SHURIKEN;
 	score = 0;
+	lives = MAX_LIVES;
 }
 
 //=============================================================================
@@ -253,6 +255,7 @@ void NinjaGhost::LoadLevel()
 {
 	player.setX(0);
 	player.setY(0);
+	player.setVelocity(VECTOR2(0,0));
 
 	for(int i=0; i<MAX_SHURIKEN; i++)
 	{
@@ -405,8 +408,17 @@ void NinjaGhost::update()
 	case LEVEL2:
 		if(player.getHealth() <= 0)
 		{
-			gameState = GAME_OVER;
-			timeInState = 0;
+			if(lives <= 0)
+			{
+				gameState = GAME_OVER;
+				timeInState = 0;
+			}
+			else
+			{
+				lives--;
+				reset();
+				LoadLevel();
+			}
 		}
 		if(player.getY() >= platforms[LEVEL_PLATFORMS()-1].getY()+GAME_HEIGHT)
 		{
@@ -545,7 +557,7 @@ void NinjaGhost::render()
 				shuriken[i].draw();
 			}
 		}
-		for(int i=0; i<ammo && i>=0; i++)
+		for(int i=0; i<min(ammo,MAX_SHURIKEN) && i>=0; i++)
 		{
 			shurikenIndicator[i].draw();
 		}

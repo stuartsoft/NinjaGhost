@@ -173,6 +173,30 @@ void Guard::ai()
 			velocity.x = -guardNS::FLEE_SPEED;
 			facingDir = left;
 		}
+		if(getCenterX() >= patrolAnchor + Platformns::WIDTH/2)
+		{
+			spriteData.x = patrolAnchor + Platformns::WIDTH/2 - guardNS::WIDTH/2*guardNS::SCALE;
+			facingDir = left;
+			gun.setCurrentFrame(2);
+			gun.setRadians(-targetAngle+PI);
+			if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
+			{
+				spawnBullet(pos, dir*bulletNS::SPEED);
+				timeSinceShoot = 0;
+			}
+		}
+		else if(getCenterX() <= patrolAnchor - Platformns::WIDTH/2)
+		{
+			spriteData.x = patrolAnchor - Platformns::WIDTH/2 - guardNS::WIDTH/2*guardNS::SCALE;
+			facingDir = right;
+			gun.setCurrentFrame(1);
+			gun.setRadians(targetAngle+PI);
+			if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
+			{
+				spawnBullet(pos, dir*bulletNS::SPEED);
+				timeSinceShoot = 0;
+			}
+		}
 	}
 	else if(dist < guardNS::ATTACK_DIST)		//ATTACK
 	{
