@@ -41,20 +41,20 @@ void Menu::initialize(Graphics *g, Input *i)
 void Menu::update()
 {
 	
-	if (input->isKeyDown(VK_UP))
+	if (input->isKeyDown(W_KEY))
 	{
 		upDepressedLastFrame = true;
 	}
-	if (input->isKeyDown(VK_DOWN))
+	if (input->isKeyDown(S_KEY))
 	{
 		downDepressedLastFrame = true;
 	}
-	if (!input->isKeyDown(VK_UP) && upDepressedLastFrame)
+	if (!input->isKeyDown(W_KEY) && upDepressedLastFrame)
 	{
 		linePtr--;
 		upDepressedLastFrame = false;
 	}
-	if (!input->isKeyDown(VK_DOWN) && downDepressedLastFrame)
+	if (!input->isKeyDown(S_KEY) && downDepressedLastFrame)
 	{
 		linePtr++;
 		downDepressedLastFrame = false;
@@ -65,6 +65,7 @@ void Menu::update()
 
 	if (input->isKeyDown(VK_RETURN))
 		selectedItem = linePtr;
+
 	else selectedItem = -1;
 	
 }

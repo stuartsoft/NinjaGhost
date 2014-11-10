@@ -12,7 +12,7 @@ namespace Playerns{
     const int Y = GAME_HEIGHT/2 - HEIGHT/2;
     const float MASS = 300.0f;              // mass
 	const float MAX_HEALTH = 100.0f;
-	const int MAX_SPEED_X =750;
+	const int MAX_SPEED_X = 750;
 	const int MAX_SPEED_Y = 1000;
 }
 

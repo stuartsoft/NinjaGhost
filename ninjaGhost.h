@@ -18,6 +18,7 @@
 #include "platform.h"
 #include "guard.h"
 #include "bullet.h"
+#include <sstream>
 
 #define LEVEL_GUARDS() ((gameState == LEVEL1) ? LEVEL1_GUARDS : LEVEL2_GUARDS)
 #define LEVEL_PLATFORMS() ((gameState == LEVEL1) ? LEVEL1_PLATFORMS : LEVEL2_PLATFORMS)
@@ -103,6 +104,7 @@ private:
 
 	// functs
 	void spawnShuriken(VECTOR2 pos, VECTOR2 vel);
+	void resetVars();
 
 public:
 	NinjaGhost();

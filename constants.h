@@ -82,6 +82,9 @@ const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
 const UCHAR ATTACK_KEY	 = VK_LBUTTON;   // left button
 const UCHAR THROW_KEY	 = VK_RBUTTON;   // right button
 
+const UCHAR W_KEY		 = 0x57;
+const UCHAR S_KEY		 = 0x53;
+const UCHAR E_KEY		 = 0x45;
 
 // texture images
 const char KATANA_IMAGE[] = "images\\katana.png";
