@@ -390,6 +390,11 @@ void NinjaGhost::update()
 			gameState = GAME_OVER;
 			timeInState = 0;
 		}
+		if(player.getY() >= platforms[LEVEL_PLATFORMS()-1].getY()+GAME_HEIGHT)
+		{
+			gameState = GAME_OVER;
+			timeInState = 0;
+		}
 
 		if(flinch)
 		{
