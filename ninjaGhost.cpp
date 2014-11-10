@@ -626,6 +626,12 @@ void NinjaGhost::collisions()
 
 		//platforming
 		for (int i=0;i<LEVEL_PLATFORMS();i++){
+			for (int j = 0;j<MAX_SHURIKEN;j++){
+				if (shuriken[j].getActive() && platforms[i].collidesWith(shuriken[j],collisionVec))
+					shuriken[j].setActive(false);
+			}
+
+
 			if(player.collidesWith(platforms[i], collisionVec)){
 				if (player.getVelocity().y >0){
 					if (player.getY()+player.getHeight()*player.getScale() < platforms[i].getY()+platforms[i].getHeight()*platforms[i].getScale()){
@@ -643,6 +649,14 @@ void NinjaGhost::collisions()
 		{
 			for(int j=0; j<BULLETS_PER_GUARD; j++)
 			{
+				//check if bullet collides with platforms
+				if(guards[i].bullets[j].getActive()){
+					for (int k = 0;k<LEVEL_PLATFORMS();k++){
+						if (platforms[k].collidesWith(guards[i].bullets[j],collisionVec))
+							guards[i].bullets[j].setActive(false);
+					}
+
+				}
 				if(!flinch && guards[i].bullets[j].getActive() && player.collidesWith(guards[i].bullets[j],collisionVec) && !Invincibility)
 				{
 					player.setHealth(player.getHealth()-bulletNS::COLLISION_DAMAGE);

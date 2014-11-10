@@ -142,10 +142,16 @@ void Player::update(float frameTime, Platform platforms[]){
 
 	//====================Edge wrapping
 
-	if (spriteData.x + 2*radius*getScale() < 0)	//left edge
-		spriteData.x = GAME_WIDTH;
-	else if (spriteData.x > GAME_WIDTH)			//right edge
-		spriteData.x = -2*radius*getScale();
+	if (spriteData.x + 0.5*getWidth()*getScale() < 0 && velocity.x <0.0f){	//left edge
+		spriteData.x = -0.5*getWidth()*getScale();
+		deltaV.x = 0;
+		velocity.x = 0;
+	}
+	else if (spriteData.x > GAME_WIDTH - 0.5*getWidth()*getScale() && velocity.x > 0.0f){			//right edge
+		spriteData.x = GAME_WIDTH - 0.5*getWidth()*getScale();
+		deltaV.x = 0;
+		velocity.x = 0;
+	}
 
 
 	Entity::update(frameTime);
