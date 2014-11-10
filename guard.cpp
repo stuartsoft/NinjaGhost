@@ -157,10 +157,12 @@ void Guard::ai()
 	distVec = VECTOR2(target->getCenterX(),target->getCenterY()) - VECTOR2(getCenterX(),getCenterY());
 	dist = D3DXVec2Length(&distVec);
 
-	VECTOR2 pos = VECTOR2(getCenterX(),getCenterY());
+	VECTOR2 pos = VECTOR2(gun.getCenterX(),gun.getCenterY());
 	VECTOR2 dir = VECTOR2(target->getCenterX(),target->getCenterY()) - pos;
 	D3DXVec2Normalize(&dir,&dir);
 	float angle = atan(dir.y/dir.x);
+	bool WithinFireAngle =  ((angle <= PI/4 && angle >= -PI/4));
+	pos = VECTOR2(gun.getCenterX() - cos(angle)*gun.getWidth()*0.5*gun.getScale(),gun.getCenterY() - sin(angle)*gun.getWidth()*0.5*gun.getScale());
 
 	if(dist < guardNS::FLEE_DIST)				//FLEE
 	{
@@ -174,24 +176,24 @@ void Guard::ai()
 			velocity.x = -guardNS::FLEE_SPEED;
 			facingDir = left;
 		}
-		if(getCenterX() >= patrolAnchor + Platformns::WIDTH/2)
+		if(getCenterX() >= patrolAnchor + Platformns::WIDTH/2 && WithinFireAngle)
 		{
 			spriteData.x = patrolAnchor + Platformns::WIDTH/2 - guardNS::WIDTH/2*guardNS::SCALE;
 			facingDir = left;
-			gun.setCurrentFrame(2);
-			gun.setRadians(-targetAngle+PI);
+			//gun.setCurrentFrame(2);
+			gun.setRadians(angle);
 			if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
 			{
 				spawnBullet(pos, dir*bulletNS::SPEED);
 				timeSinceShoot = 0;
 			}
 		}
-		else if(getCenterX() <= patrolAnchor - Platformns::WIDTH/2)
+		else if(getCenterX() <= patrolAnchor - Platformns::WIDTH/2 && WithinFireAngle)
 		{
 			spriteData.x = patrolAnchor - Platformns::WIDTH/2 - guardNS::WIDTH/2*guardNS::SCALE;
 			facingDir = right;
-			gun.setCurrentFrame(1);
-			gun.setRadians(targetAngle+PI);
+			//gun.setCurrentFrame(1);
+			gun.setRadians(angle);
 			if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
 			{
 				spawnBullet(pos, dir*bulletNS::SPEED);
@@ -205,16 +207,16 @@ void Guard::ai()
 		if(dir.x < 0)
 		{
 			facingDir = left;
-			gun.setCurrentFrame(2);
-			gun.setRadians(-targetAngle+PI);
+			//gun.setCurrentFrame(2);
+			gun.setRadians(angle);
 		}
 		else
 		{
 			facingDir = right;
-			gun.setCurrentFrame(1);
-			gun.setRadians(targetAngle+PI);
+			//gun.setCurrentFrame(1);
+			gun.setRadians(angle);
 		}
-		if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
+		if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN && WithinFireAngle)
 		{
 			spawnBullet(pos, dir*bulletNS::SPEED);
 			timeSinceShoot = 0;

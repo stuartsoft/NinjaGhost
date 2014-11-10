@@ -201,7 +201,7 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	timeSinceMenuPress = 0;
 
-	audio->playCue("IsolatedMind");
+	//audio->playCue("IsolatedMind");
 	time(&t_backgroundmusicstart);
 
 	return;
