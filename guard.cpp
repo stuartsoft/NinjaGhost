@@ -130,14 +130,7 @@ void Guard::update(float frameTime){
 			setCurrentFrame(0);
 	}
 
-	if(spriteData.x >= patrolAnchor + Platformns::WIDTH/2)
-	{
-		spriteData.x = patrolAnchor + Platformns::WIDTH/2;
-	}
-	else if(spriteData.x <= patrolAnchor - Platformns::WIDTH/2)
-	{
-		spriteData.x = patrolAnchor - Platformns::WIDTH/2;
-	}
+	
 
 	setFrameDelay(0.25);
 
@@ -207,7 +200,7 @@ void Guard::ai()
 		{
 			velocity.x = -guardNS::SPEED;
 			facingDir = left;
-			if(spriteData.x <= patrolAnchor - patrolWidth)
+			if(getCenterX() <= patrolAnchor - patrolWidth)
 			{
 				patrolDir = right;
 			}
@@ -216,10 +209,20 @@ void Guard::ai()
 		{
 			velocity.x = guardNS::SPEED;
 			facingDir = right;
-			if(spriteData.x >= patrolAnchor + patrolWidth)
+			if(getCenterX() >= patrolAnchor + patrolWidth)
 			{
 				patrolDir = left;
 			}
 		}
 	}
+
+	if(getCenterX() >= patrolAnchor + Platformns::WIDTH/2)
+	{
+		spriteData.x = patrolAnchor + Platformns::WIDTH/2 - guardNS::WIDTH/2*guardNS::SCALE;
+	}
+	else if(getCenterX() <= patrolAnchor - Platformns::WIDTH/2)
+	{
+		spriteData.x = patrolAnchor - Platformns::WIDTH/2 - guardNS::WIDTH/2*guardNS::SCALE;
+	}
+
 }

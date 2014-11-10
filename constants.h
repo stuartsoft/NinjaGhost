@@ -49,7 +49,7 @@ const int BULLETS_PER_GUARD = 15;
 const int LEVEL1_GUARDS = 6;
 const int LEVEL2_GUARDS = 6;
 
-const int LEVEL1_PLATFORMS = 10;
+const int LEVEL1_PLATFORMS = 14;
 const int LEVEL2_PLATFORMS = 10;
 
 const float THROW_COOLDOWN = 1.2f;
