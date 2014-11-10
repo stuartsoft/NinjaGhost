@@ -55,6 +55,7 @@ void Guard::bulletsInit(TextureManager* bulletTM, Game* g)
 
 void Guard::spawnBullet(VECTOR2 pos, VECTOR2 vel)
 {
+	audio->playCue("Fire");
 	Bullet* first = nullptr;
 	for(int i=0; i<BULLETS_PER_GUARD; i++)
 	{

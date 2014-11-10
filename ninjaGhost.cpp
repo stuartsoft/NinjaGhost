@@ -6,6 +6,8 @@
 #include "ninjaGhost.h"
 #include <iostream>
 #include <fstream>
+#include <ctime>
+#include <chrono>
 
 using namespace std;
 
@@ -192,6 +194,9 @@ void NinjaGhost::initialize(HWND hwnd)
 
 	timeSinceMenuPress = 0;
 
+	audio->playCue("IsolatedMind");
+	time(&t_backgroundmusicstart);
+
 	return;
 }
 
@@ -345,6 +350,12 @@ void NinjaGhost::gameStateUpdate()
 //=============================================================================
 void NinjaGhost::update()
 {
+	time(&t_now);
+	if (difftime(t_now, t_backgroundmusicstart)>123){
+		time(&t_backgroundmusicstart);
+		audio->playCue("IsolatedMind");
+	}
+
 	gameStateUpdate();
 	if(input->isKeyDown(ESC_KEY))
 	{
@@ -442,6 +453,7 @@ void NinjaGhost::update()
 			timeSinceThrow = 30;
 		if(ammo > 0 && timeSinceThrow >= THROW_COOLDOWN && input->getMouseRButton())
 		{
+			audio->playCue("Swoosh");
 			VECTOR2 pos = VECTOR2(player.getCenterX(),player.getCenterY());
 			VECTOR2 dir = VECTOR2(input->getMouseX(),input->getMouseY()) - pos;
 			VECTOR2 normdir;
@@ -579,6 +591,7 @@ void NinjaGhost::collisions()
 	{
 		collisionVec = VECTOR2(0,0);
 
+		//platforming
 		for (int i=0;i<LEVEL_PLATFORMS();i++){
 			if(player.collidesWith(platforms[i], collisionVec)){
 				if (player.getVelocity().y >0){
@@ -592,6 +605,7 @@ void NinjaGhost::collisions()
 			}
 		}
 
+		//player damaged by bullets
 		for(int i=0; i<LEVEL_GUARDS(); i++)
 		{
 			for(int j=0; j<BULLETS_PER_GUARD; j++)

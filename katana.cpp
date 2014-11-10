@@ -36,6 +36,7 @@ void Katana::update(float frameTime)
 	timeSinceSwing += frameTime;
 	if(!active && timeSinceSwing >= KATANA_COOLDOWN && input->getMouseLButton())
 	{
+		audio->playCue("Swoosh");
 		setActive(true);
 		swingAngle = katanaNS::SWING_START;
 		setDegrees(swingAngle);

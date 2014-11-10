@@ -32,6 +32,8 @@ private:
 	Image Backgroundimg[2];
 	Image BlackBoarders;
 	Image RedBoarders;
+	time_t t_backgroundmusicstart;
+	time_t t_now;
 
 	TextureManager GuardTM;
 

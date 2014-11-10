@@ -21,6 +21,8 @@ private:
 	direction playerdir;
 	float floatoffset;
 	direction floatdir;
+	time_t t_audioplayed;
+	time_t t_now;
 public:
 	Player();
 	direction FacingDir();
@@ -28,6 +30,7 @@ public:
 	void Player::draw();
 	void Player::draw(DWORD color);
 	void Player::update(float frameTime, Platform platforms[]);
+	void Player::setHealth(float h);
 };
 
 #endif

@@ -67,8 +67,8 @@ const float HEALTH_PER_MELEE_KILL = 50.0f;
 const float HEALTH_PER_RANGED_KILL = 25.0f;
 
 // audio files
-const char WAVE_BANK[] = "";
-const char SOUND_BANK[] = "";
+const char WAVE_BANK[] = "Sound\\Win\\Wave Bank.xwb";
+const char SOUND_BANK[] = "Sound\\Win\\Sound Bank.xsb";
 
 // audio cues
 

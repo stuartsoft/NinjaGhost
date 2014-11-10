@@ -1,4 +1,6 @@
 #include "player.h"
+#include <ctime>
+#include <chrono>
 
 Player::Player(){
 	spriteData.width = Playerns::WIDTH;           // size of Ship1
@@ -97,8 +99,10 @@ void Player::update(float frameTime, Platform platforms[]){
 		}
 	}
 
-	if (input->isKeyDown(VK_SPACE) && StandingOnPlatform)//up
+	if (input->isKeyDown(VK_SPACE) && StandingOnPlatform){//up
 		inputDir.y = -1;
+		audio->playCue("Jump");
+	}
 
 	//D3DXVec2Normalize(&inputDir,&inputDir);
 	inputDir.x *= 5;
@@ -147,4 +151,20 @@ void Player::update(float frameTime, Platform platforms[]){
 	Entity::update(frameTime);
 	spriteData.x += frameTime * velocity.x;							// move ship along X 
 	spriteData.y += frameTime * velocity.y;						   // move ship along Y
+
+	time(&t_now);
+	if (difftime(t_now, t_audioplayed) >= 1.0 && (int)getHealth()==25){
+		audio->playCue("Dying");
+		time(&t_audioplayed);
+	}
+}
+
+void Player::setHealth(float h){
+	if (h<getHealth())//player is losing health
+		audio->playCue("Hit");
+
+	Entity::setHealth(h);
+	if((int)getHealth()==25){
+		time(&t_audioplayed);//prepare to begin playing alarm
+	}
 }
