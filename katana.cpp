@@ -24,6 +24,11 @@ Katana::Katana() : Entity()
 	collisionType = entityNS::ROTATED_BOX;
 	active = false;
 
+	edge.top = -katanaNS::HEIGHT/2;
+	edge.bottom = katanaNS::HEIGHT/2;
+	edge.left = -katanaNS::WIDTH/2;
+	edge.right = 0;
+
 	player = nullptr;
 	swingAngle = 0;
 	timeSinceSwing = 0;
@@ -55,6 +60,10 @@ void Katana::update(float frameTime)
 			{
 				setActive(false);
 			}
+			edge.top = -katanaNS::HEIGHT/2;
+			edge.bottom = katanaNS::HEIGHT/2;
+			edge.left = 0;
+			edge.right = katanaNS::WIDTH/2;
 		}
 		if(player->FacingDir() == left)
 		{
@@ -66,6 +75,10 @@ void Katana::update(float frameTime)
 			{
 				setActive(false);
 			}
+			edge.top = -katanaNS::HEIGHT/2;
+			edge.bottom = katanaNS::HEIGHT/2;
+			edge.left = -katanaNS::WIDTH/2;
+			edge.right = 0;
 		}
 	}
 	

@@ -49,7 +49,7 @@ const int BULLETS_PER_GUARD = 15;
 const int LEVEL1_GUARDS = 6;
 const int LEVEL2_GUARDS = 6;
 
-const int LEVEL1_PLATFORMS = 10;
+const int LEVEL1_PLATFORMS = 14;
 const int LEVEL2_PLATFORMS = 10;
 
 const float THROW_COOLDOWN = 1.2f;
@@ -82,6 +82,9 @@ const UCHAR ENTER_KEY    = VK_RETURN;   // Enter key
 const UCHAR ATTACK_KEY	 = VK_LBUTTON;   // left button
 const UCHAR THROW_KEY	 = VK_RBUTTON;   // right button
 
+const UCHAR W_KEY		 = 0x57;
+const UCHAR S_KEY		 = 0x53;
+const UCHAR E_KEY		 = 0x45;
 
 // texture images
 const char KATANA_IMAGE[] = "images\\katana.png";

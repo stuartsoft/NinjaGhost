@@ -200,19 +200,24 @@ void NinjaGhost::initialize(HWND hwnd)
 	return;
 }
 
+void NinjaGhost::resetVars()
+{
+	ammo = MAX_AMMO;
+	score = 0;
+}
 
 //=============================================================================
 // Reset the game to begin play and after a score
 //=============================================================================
 void NinjaGhost::reset()
 {
+	player.setVelocity(VECTOR2(0,0));
 	player.setHealth(Playerns::MAX_HEALTH);
 	player.setX(0);
 	player.setY(0);
-	player.setVelocity(VECTOR2(0,0));
-	ammo = MAX_AMMO;
-	score = 0;
+
 	flinch = false;
+	timeSinceThrow = 0;
 
 	for(int i=0; i<MAX_GUARDS; i++)
 	{
@@ -234,7 +239,6 @@ void NinjaGhost::reset()
 	}
 	katana.setActive(false);
 	LevelExit.setActive(false);
-	timeSinceThrow = 0;
 
 	for(int i=0; i<MAX_PLATFORMS; i++)
 	{
@@ -331,17 +335,31 @@ void NinjaGhost::gameStateUpdate()
 		timeInState = 0;
 		LoadLevel();
 	}
+	if(gameState == LEVEL1 && input->isKeyDown(E_KEY) && player.collidesWith(LevelExit,collisionVec))
+	{
+		gameState = INTRO2;
+		timeInState = 0;
+		reset();
+	}
+	if(gameState == LEVEL2 && input->isKeyDown(E_KEY) && player.collidesWith(LevelExit,collisionVec))
+	{
+		gameState = GAME_COMPLETE;
+		timeInState = 0;
+		reset();
+	}
 	if(gameState == GAME_OVER && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY))
 	{
 		gameState = MAIN_MENU;
 		timeInState = 0;
 		reset();
+		resetVars();
 	}
 	if(gameState == GAME_COMPLETE && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY))
 	{
 		gameState = MAIN_MENU;
 		timeInState = 0;
 		reset();
+		resetVars();
 	}
 }
 //=============================================================================
@@ -397,6 +415,11 @@ void NinjaGhost::update()
 	case LEVEL1:
 	case LEVEL2:
 		if(player.getHealth() <= 0)
+		{
+			gameState = GAME_OVER;
+			timeInState = 0;
+		}
+		if(player.getY() >= platforms[LEVEL_PLATFORMS()-1].getY()+GAME_HEIGHT)
 		{
 			gameState = GAME_OVER;
 			timeInState = 0;
@@ -479,8 +502,10 @@ void NinjaGhost::update()
 //=============================================================================
 void NinjaGhost::render()
 {
+	stringstream scorestr;
+	scorestr << "Your Score: ";
+	scorestr << score;
 	graphics->spriteBegin();
-	
 	switch(gameState)
 	{
 	case MAIN_MENU:
@@ -536,6 +561,11 @@ void NinjaGhost::render()
 		{
 			shurikenIndicator[i].draw();
 		}
+		if(player.collidesWith(LevelExit,collisionVec))
+		{
+			gameOverFont2->setFontColor(graphicsNS::RED);
+			gameOverFont2->print("Press E to proceed", 2*GAME_WIDTH/5, GAME_HEIGHT/2);
+		}
 		BlackBoarders.draw();
 		RedBoarders.draw(healthFilter);
 
@@ -543,14 +573,17 @@ void NinjaGhost::render()
 		{
 			//graphics->setBackColor(graphicsNS::BLACK);
 			GameOverFilter.draw();
-			gameOverFont1->print("Game Over...",GAME_WIDTH/3,GAME_HEIGHT/3);
-			gameOverFont2->print("Press Enter to return to main menu",GAME_WIDTH/3,2*GAME_HEIGHT/3);
+			gameOverFont2->setFontColor(graphicsNS::WHITE);
+			gameOverFont1->print("Game Over...",GAME_WIDTH/3,GAME_HEIGHT/4);
+			gameOverFont2->print(scorestr.str(),GAME_WIDTH/3,GAME_HEIGHT/2);
+			gameOverFont2->print("Press Enter to return to main menu",GAME_WIDTH/3,3*GAME_HEIGHT/4);
 		}
 		break;
 	case GAME_COMPLETE:
 		graphics->setBackColor(graphicsNS::WHITE);
-		gameCompleteFont1->print("Victory is yours!",GAME_WIDTH/3,GAME_HEIGHT/3);
-		gameCompleteFont2->print("Press Enter to return to main menu",GAME_WIDTH/3,2*GAME_HEIGHT/3);
+		gameCompleteFont1->print("Victory is yours!",GAME_WIDTH/3,GAME_HEIGHT/4);
+		gameCompleteFont2->print(scorestr.str(),GAME_WIDTH/3,GAME_HEIGHT/2);
+		gameCompleteFont2->print("Press Enter to return to main menu",GAME_WIDTH/3,3*GAME_HEIGHT/4);
 		break;
 	case TUTORIAL:
 		Tutorial.draw();
@@ -653,20 +686,6 @@ void NinjaGhost::collisions()
 				}
 
 			}
-		}
-
-		if(LevelExit.collidesWith(player,collisionVec))
-		{
-			if(gameState == LEVEL1)
-			{
-				gameState = INTRO2;
-				timeInState = 0;
-			}
-			else if(gameState == LEVEL2)
-			{
-				gameState = GAME_COMPLETE;
-				timeInState = 0;
-			}	
 		}
 	
 	}
