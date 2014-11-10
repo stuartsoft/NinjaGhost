@@ -16,7 +16,6 @@ namespace shurikenNS
 	const float GRAVITY = 800;
 
 	const float MAX_SPEED = 1500;
-
 	
 	const int   TEXTURE_COLS = 1;           // texture has 1 columns
 	const int   SHURIKEN_START_FRAME = 0;      // starts at frame 0

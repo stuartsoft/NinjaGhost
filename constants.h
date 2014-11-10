@@ -95,7 +95,7 @@ const char DOOR_IMAGE[] = "images\\door.png";
 // splash screen images
 const char MAIN_MENU_IMAGE[] = "images\\menu.png";
 const char SPLASH1_IMAGE[] = "images\\splash1.png";
-const char SPLASH2_IMAGE[] = "images\\splash1.png";
+const char SPLASH2_IMAGE[] = "images\\splash2.png";
 const char TUTORIAL_IMAGE[] = "images\\tutorial.png";
 
 // States
