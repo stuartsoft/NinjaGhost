@@ -18,21 +18,29 @@ Guard::Guard()
 	facingDir = right;
 	patrolDir = right;
 
-	edge.left = -guardNS::WIDTH/2;
-	edge.right = guardNS::WIDTH/2;
+	edge.left = -guardNS::WIDTH/5;
+	edge.right = guardNS::WIDTH/5;
 	edge.top = -guardNS::HEIGHT/2;
 	edge.bottom = guardNS::HEIGHT/2;
+
+	setFrameDelay(.1f);
+	setLoop(true);
 
 	dist = 0;
 	target = nullptr;
 	targetAquired = false;
 	timeSinceShoot = 0;
+
+	lastFrameFace = none;
+	facingDir = none;
+	patrolDir = none;
 }
 
 void Guard::gunInit(TextureManager* gunTM)
 {
-	if(!gun.initialize(graphics, gunNS::WIDTH, gunNS::HEIGHT, 0, gunTM))
+	if(!gun.initialize(graphics, gunNS::WIDTH, gunNS::HEIGHT, 2, gunTM))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init gun image"));
+	gun.setScale(gunNS::SCALE);
 }
 
 void Guard::bulletsInit(TextureManager* bulletTM, Game* g)
@@ -41,6 +49,7 @@ void Guard::bulletsInit(TextureManager* bulletTM, Game* g)
 	{
 		if(!bullets[i].initialize(g, bulletNS::WIDTH, bulletNS::HEIGHT, 0, bulletTM))
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init bullets"));
+		bullets[i].setScale(.6);
 	}
 }
 
@@ -92,6 +101,7 @@ void Guard::initializePatrol(Platform* plat, Entity* t)
 	patrolWidth = Platformns::WIDTH/2 * guardNS::PATROL_PERCENT;
 	spriteData.y = patrolPlatform->getY()-guardNS::HEIGHT*guardNS::SCALE;
 	spriteData.x = patrolAnchor;
+	patrolDir = right;
 
 	target = t;
 }
@@ -100,8 +110,25 @@ void Guard::update(float frameTime){
 	Entity::update(frameTime);
 	spriteData.x += frameTime * velocity.x;
 	spriteData.y += frameTime * velocity.y;
-
 	timeSinceShoot += frameTime;
+
+	if(facingDir == left && lastFrameFace != left)
+	{
+		setFrames(2,3);
+		lastFrameFace = left;
+	}
+	if(facingDir == right && lastFrameFace != right)
+	{
+		setFrames(0,1);
+		lastFrameFace = right;
+	}
+	if(velocity.x == 0)
+	{
+		if(facingDir == left)
+			setCurrentFrame(3);
+		if(facingDir == right)
+			setCurrentFrame(0);
+	}
 
 	if(spriteData.x >= patrolAnchor + Platformns::WIDTH/2)
 	{
@@ -116,17 +143,18 @@ void Guard::update(float frameTime){
 
 	if(facingDir == right)
 	{
-		gun.setCurrentFrame(0);
 		gun.setX(getCenterX()+getScale()*guardNS::WIDTH/4-gunNS::WIDTH*gunNS::SCALE/2);
 		gun.setY(getCenterY());
-		setRadians(0);
+		gun.setCurrentFrame(1);
+		gun.setRadians(0);
 	}
 	if(facingDir == left)
 	{
-		gun.setCurrentFrame(1);
+		
 		gun.setX(getCenterX()-getScale()*guardNS::WIDTH/4-gunNS::WIDTH*gunNS::SCALE/2);
 		gun.setY(getCenterY());
-		setRadians(0);
+		gun.setCurrentFrame(2);
+		gun.setRadians(0);
 	}
 }
 
@@ -134,6 +162,11 @@ void Guard::ai()
 {
 	distVec = VECTOR2(target->getCenterX(),target->getCenterY()) - VECTOR2(getCenterX(),getCenterY());
 	dist = D3DXVec2Length(&distVec);
+
+	VECTOR2 pos = VECTOR2(getCenterX(),getCenterY());
+	VECTOR2 dir = VECTOR2(target->getCenterX(),target->getCenterY()) - pos;
+	D3DXVec2Normalize(&dir,&dir);
+	float angle = atan(dir.y/dir.x);
 
 	if(dist < guardNS::FLEE_DIST)				//FLEE
 	{
@@ -151,11 +184,19 @@ void Guard::ai()
 	else if(dist < guardNS::ATTACK_DIST)		//ATTACK
 	{
 		velocity.x = 0;
+		if(dir.x < 0)
+		{
+			facingDir = left;
+			gun.setCurrentFrame(1);
+		}
+		else
+		{
+			facingDir = right;
+			gun.setCurrentFrame(0);
+		}
+		gun.setRadians(targetAngle);
 		if(timeSinceShoot >= guardNS::SHOOT_COOLDOWN)
 		{
-			VECTOR2 pos = VECTOR2(getCenterX(),getCenterY());
-			VECTOR2 dir = VECTOR2(target->getCenterX(),target->getCenterY()) - pos;
-			D3DXVec2Normalize(&dir,&dir);
 			spawnBullet(pos, dir*bulletNS::SPEED);
 			timeSinceShoot = 0;
 		}

@@ -8,7 +8,7 @@
 
 namespace guardNS
 {
-    const int WIDTH = 64;                   // image width
+    const int WIDTH = 128;                   // image width
     const int HEIGHT = 128;                  // image height
     const int X = GAME_WIDTH/2 - WIDTH/2;   // location on screen
     const int Y = GAME_HEIGHT/2 - HEIGHT/2;
@@ -19,6 +19,8 @@ namespace guardNS
 	const int MAX_SPEED_X = 750;
 	const int MAX_SPEED_Y = 1000;
 	const float SCALE = 1.0;
+
+	const int TEXTURE_COL = 2;
 
 	const float PATROL_PERCENT = .8;
 
@@ -33,9 +35,9 @@ namespace guardNS
 
 namespace gunNS
 {
-	const int WIDTH = 149;
+	const int WIDTH = 43;
 	const int HEIGHT = 8;
-	const float SCALE = 1.0;
+	const float SCALE = 2.0;
 }
 
 class Guard: public Entity{
@@ -44,6 +46,7 @@ private:
 	
 	direction facingDir;
 	direction patrolDir;
+	direction lastFrameFace;
 
 	int patrolAnchor;
 	int patrolWidth;

@@ -46,11 +46,11 @@ const int MAX_SHURIKEN = 5;
 const int MAX_GUARDS = 25;
 const int BULLETS_PER_GUARD = 15;
 
-const int LEVEL1_GUARDS = 1;
-const int LEVEL2_GUARDS = 15;
+const int LEVEL1_GUARDS = 6;
+const int LEVEL2_GUARDS = 6;
 
 const int LEVEL1_PLATFORMS = 10;
-const int LEVEL2_PLATFORMS = 20;
+const int LEVEL2_PLATFORMS = 10;
 
 const float THROW_COOLDOWN = 1.2;
 const float KATANA_COOLDOWN = 0.7;
@@ -83,7 +83,8 @@ const UCHAR THROW_KEY	 = VK_RBUTTON;   // right button
 // texture images
 const char KATANA_IMAGE[] = "images\\katana.png";
 const char SHURIKEN_IMAGE[] = "images\\shuriken2.png";
-
+const char GUARD_TEXTURE[] = "images\\guard2.png";
+const char DOOR_IMAGE[] = "images\\door.png";
 
 // splash screen images
 const char MAIN_MENU_IMAGE[] = "images\\menu.png";

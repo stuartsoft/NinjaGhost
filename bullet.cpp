@@ -11,8 +11,8 @@ Bullet::Bullet() : Entity()
 	spriteData.x = 0;
 	spriteData.y = 0;
 
-	velocity.x = 0;                             // velocity X
-	velocity.y = 0;                             // velocity Y
+	velocity.x = 0;
+	velocity.y = 0;
 	
 	radius = (bulletNS::WIDTH + bulletNS::HEIGHT)/4.0;	
 	collisionType = entityNS::CIRCLE;
@@ -30,4 +30,9 @@ void Bullet::update(float frameTime)
 	Entity::update(frameTime);
 	spriteData.x += frameTime * velocity.x;
     spriteData.y += frameTime * velocity.y;
+
+	if(spriteData.x <= -100 || spriteData.x >= GAME_WIDTH+100)
+	{
+		active = false;
+	}
 }

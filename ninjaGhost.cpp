@@ -18,6 +18,7 @@ NinjaGhost::NinjaGhost()
 	gameOverFont2 = new TextDX;
 	gameCompleteFont1 = new TextDX;
 	gameCompleteFont2 = new TextDX;
+	cheatFont = new TextDX;
 }
 
 //=============================================================================
@@ -30,6 +31,7 @@ NinjaGhost::~NinjaGhost()
 	SAFE_DELETE(gameOverFont2);
 	SAFE_DELETE(gameCompleteFont1);
 	SAFE_DELETE(gameCompleteFont2);
+	SAFE_DELETE(cheatFont);
 }
 
 //=============================================================================
@@ -75,16 +77,16 @@ void NinjaGhost::initialize(HWND hwnd)
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform"));
 	}
 
-	if(!GuardTM.initialize(graphics, "images\\guard.png"))
+	if(!GuardTM.initialize(graphics, GUARD_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard texture"));
-	if(!GunTM.initialize(graphics, "images\\katana.png"))
+	if(!GunTM.initialize(graphics, "images\\gun.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init gun texture"));
-	if(!BulletTM.initialize(graphics, "images\\shuriken.png"))
+	if(!BulletTM.initialize(graphics, "images\\bullet.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init bullet texture"));
 
 	for(int i=0; i<MAX_GUARDS; i++)
 	{
-		if(!guards[i].initialize(this, guardNS::WIDTH, guardNS::HEIGHT, 2, &GuardTM))
+		if(!guards[i].initialize(this, guardNS::WIDTH, guardNS::HEIGHT, guardNS::TEXTURE_COL, &GuardTM))
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init guard"));
 		guards[i].setX(0);
 		guards[i].setY(0);
@@ -105,7 +107,16 @@ void NinjaGhost::initialize(HWND hwnd)
 	{
 		if(!shuriken[i].initialize(this, shurikenNS::WIDTH, shurikenNS::HEIGHT, 0, &ShurikenTM))
 			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken"));
+		if(!shurikenIndicator[i].initialize(graphics, shurikenNS::WIDTH, shurikenNS::HEIGHT, 0, &ShurikenTM))
+			throw(GameError(gameErrorNS::FATAL_ERROR,"Error init shuriken ui image"));
 	}
+	
+	if(!ExitTM.initialize(graphics, DOOR_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init door texture"));
+	if(!LevelExit.initialize(this, 64, 128, 0, &ExitTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init door"));
+	LevelExit.setCollisionType(entityNS::BOX);
+	LevelExit.setCollisionBox(-32,32,-64,64);
 
 	// splash screen init
 	if(!MainMenuSplashTM.initialize(graphics, MAIN_MENU_IMAGE))
@@ -151,6 +162,8 @@ void NinjaGhost::initialize(HWND hwnd)
 	gameCompleteFont1->setFontColor(graphicsNS::BLACK);
 	gameCompleteFont2->setFontColor(graphicsNS::BLACK);
 
+	if(cheatFont->initialize(graphics, 36, false, false, "Arial") == false)
+        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing cheat font"));
 
 	// menu init
 	mainMenu = new Menu();
@@ -166,6 +179,11 @@ void NinjaGhost::initialize(HWND hwnd)
 	ammo = MAX_AMMO;
 	score = 0;
 
+	Invincibility = false;
+	UnlimitedAmmo = false;
+
+	timeSinceMenuPress = 0;
+
 	return;
 }
 
@@ -175,6 +193,43 @@ void NinjaGhost::initialize(HWND hwnd)
 //=============================================================================
 void NinjaGhost::reset()
 {
+	player.setHealth(Playerns::MAX_HEALTH);
+	player.setX(0);
+	player.setY(0);
+	player.setVelocity(VECTOR2(0,0));
+	ammo = MAX_AMMO;
+	lives = STARTING_LIVES;
+	score = 0;
+	
+	for(int i=0; i<MAX_GUARDS; i++)
+	{
+		guards[i].setActive(false);
+		guards[i].setX(0);
+		guards[i].setY(0);
+		for(int j=0; j<BULLETS_PER_GUARD; j++)
+		{
+			guards[i].bullets[j].setActive(false);
+			guards[i].bullets[j].setX(0);
+			guards[i].bullets[j].setY(0);
+		}
+	}
+	for(int i=0; i<MAX_SHURIKEN; i++)
+	{
+		shuriken[i].setActive(false);
+		shuriken[i].setX(0);
+		shuriken[i].setY(0);
+	}
+	katana.setActive(false);
+	LevelExit.setActive(false);
+	timeSinceThrow = 0;
+
+	for(int i=0; i<MAX_PLATFORMS; i++)
+	{
+		platforms[i].setActive(false);
+		platforms[i].setX(0);
+		platforms[i].setY(0);
+	}
+
 	return;
 }
 
@@ -182,16 +237,27 @@ void NinjaGhost::reset()
 //=================================
 // initialize game items for level1
 //=================================
-void NinjaGhost::LoadLevel1()
+void NinjaGhost::LoadLevel()
 {
-	guards[1].setActive(false);
-	//position platforms
-	YOffset = 0;
 	player.setX(0);
 	player.setY(0);
-	ifstream myfile("Levels\\L1.txt");
-	if (myfile.is_open()){
-		for (int i=0;i<LEVEL1_PLATFORMS;i++){
+
+	for(int i=0; i<MAX_SHURIKEN; i++)
+	{
+		shurikenIndicator[i].setX(GAME_WIDTH/2 + shurikenNS::WIDTH*(i-2));
+		shurikenIndicator[i].setY(0);
+	}
+
+	//position platforms
+	YOffset = 0;
+	ifstream myfile;
+	if(gameState == LEVEL1)
+		myfile.open("Levels\\L1.txt");
+	if(gameState == LEVEL2)
+		myfile.open("Levels\\L2.txt");
+	if (myfile.is_open())
+	{
+		for (int i=0;i<LEVEL_PLATFORMS();i++){
 			string line;
 			getline(myfile,line);
 			int x,y;
@@ -201,16 +267,21 @@ void NinjaGhost::LoadLevel1()
 			platforms[i].setY(y);
 			platforms[i].setActive(true);
 		}
+		LevelExit.setX(platforms[0].getCenterX()-32);
+		LevelExit.setY(platforms[0].getY()-128);
+		LevelExit.setActive(true);
+		for(int i=0; i<LEVEL_GUARDS(); i++)
+		{
+			string line;
+			getline(myfile,line);
+			int p;
+			p = atoi(line.c_str());
+			guards[i].setActive(true);
+			guards[i].initializePatrol(&platforms[p], &player);
+		}
 	}
+	
 	myfile.close();
-
-	for(int i=0; i<LEVEL_GUARDS(); i++)
-	{
-		guards[i].initializePatrol(&platforms[1], &player);
-	}
-
-	ammo = MAX_AMMO;
-
 }
 
 
@@ -220,7 +291,7 @@ void NinjaGhost::LoadLevel1()
 void NinjaGhost::gameStateUpdate()
 {
 	timeInState += frameTime;
-	if(gameState == MAIN_MENU && timeInState >= 1 && input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 0)
+	if(gameState == MAIN_MENU && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 0)
 	{
 		gameState = INTRO1;
 		timeInState = 0;
@@ -235,21 +306,29 @@ void NinjaGhost::gameStateUpdate()
 		gameState = MAIN_MENU;
 		timeInState = 0;
 	}
-	if(gameState == INTRO1 && timeInState > 1.0)
+	if(gameState == INTRO1 && timeInState > 1.5)
 	{
 		gameState = LEVEL1;
 		timeInState = 0;
-		LoadLevel1();
+		LoadLevel();
+	}
+	if(gameState == INTRO2 && timeInState > 1.5)
+	{
+		gameState = LEVEL2;
+		timeInState = 0;
+		LoadLevel();
 	}
 	if(gameState == GAME_OVER && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY))
 	{
 		gameState = MAIN_MENU;
 		timeInState = 0;
+		reset();
 	}
 	if(gameState == GAME_COMPLETE && timeInState >= 0.5 && input->isKeyDown(ENTER_KEY))
 	{
 		gameState = MAIN_MENU;
 		timeInState = 0;
+		reset();
 	}
 }
 //=============================================================================
@@ -268,9 +347,32 @@ void NinjaGhost::update()
 	{
 	case MAIN_MENU:
 		mainMenu->update();
+		timeSinceMenuPress += frameTime;
 		if(input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 3)
 		{
 			exitGame();
+		}
+		if(input->isKeyDown(ENTER_KEY) && mainMenu->getSelectedItem() == 2 && timeSinceMenuPress > 0.5)
+		{
+			timeSinceMenuPress = 0;
+			if(!Invincibility && !UnlimitedAmmo)
+			{
+				Invincibility = true;
+			}
+			else if(Invincibility && !UnlimitedAmmo)
+			{
+				Invincibility = false;
+				UnlimitedAmmo = true;
+			}
+			else if(!Invincibility && UnlimitedAmmo)
+			{
+				Invincibility = true;
+			}
+			else if(Invincibility && UnlimitedAmmo)
+			{
+				Invincibility = false;
+				UnlimitedAmmo = false;
+			}
 		}
 		break;
 	case LEVEL1:
@@ -286,6 +388,7 @@ void NinjaGhost::update()
 			}
 			else
 			{
+				
 
 			}
 		}
@@ -309,6 +412,8 @@ void NinjaGhost::update()
 			platforms[i].setVelocity(tempv);
 			platforms[i].update(frameTime);
 		}
+		LevelExit.setVelocity(tempv);
+		LevelExit.setY(LevelExit.getY()+LevelExit.getVelocity().y*frameTime);
 
 		for(int i=0; i<LEVEL_GUARDS(); i++)
 		{
@@ -335,7 +440,8 @@ void NinjaGhost::update()
 			normdir *= min(D3DXVec2Length(&dir)*shurikenNS::SPEED/GAME_WIDTH,shurikenNS::MAX_SPEED);
 			spawnShuriken(pos, normdir);
 			timeSinceThrow = 0;
-			ammo -= 1;
+			if(!UnlimitedAmmo)
+				ammo -= 1;
 		}
 		for(int i=0; i<MAX_SHURIKEN; i++)
 		{
@@ -359,9 +465,20 @@ void NinjaGhost::render()
 	case MAIN_MENU:
 		MainMenuSplash.draw();
 		mainMenu->displayMenu();
+		if(Invincibility)
+		{
+			cheatFont->print("INVINCIBLE!",GAME_WIDTH/3,GAME_HEIGHT/20);
+		}
+		if(UnlimitedAmmo)
+		{
+			cheatFont->print("UNLIMITED AMMO!",2*GAME_WIDTH/3,GAME_HEIGHT/20);
+		}
 		break;
 	case INTRO1:
 		Level1Splash.draw();
+		break;
+	case INTRO2:
+		Level2Splash.draw();
 		break;
 	case LEVEL1:
 	case LEVEL2:
@@ -376,6 +493,7 @@ void NinjaGhost::render()
 		{
 			platforms[i].draw();
 		}
+		LevelExit.draw();
 		player.draw();
 		if(katana.getActive())
 		{
@@ -387,6 +505,10 @@ void NinjaGhost::render()
 			{
 				shuriken[i].draw();
 			}
+		}
+		for(int i=0; i<ammo; i++)
+		{
+			shurikenIndicator[i].draw();
 		}
 		BlackBoarders.draw();
 		break;
@@ -436,7 +558,7 @@ void NinjaGhost::collisions()
 	if(gameState == LEVEL1 || gameState == LEVEL2)
 	{
 		collisionVec = VECTOR2(0,0);
-	
+
 		for (int i=0;i<LEVEL_PLATFORMS();i++){
 			if(player.collidesWith(platforms[i], collisionVec)){
 				if (player.getVelocity().y >0){
@@ -454,7 +576,7 @@ void NinjaGhost::collisions()
 		{
 			for(int j=0; j<BULLETS_PER_GUARD; j++)
 			{
-				if(guards[i].bullets[j].getActive() && player.collidesWith(guards[i].bullets[j],collisionVec))
+				if(guards[i].bullets[j].getActive() && player.collidesWith(guards[i].bullets[j],collisionVec) && !Invincibility)
 				{
 					player.setHealth(player.getHealth()-bulletNS::COLLISION_DAMAGE);
 					guards[i].bullets[j].setActive(false);
@@ -466,11 +588,12 @@ void NinjaGhost::collisions()
 				if(katana.getActive() && katana.collidesWith(guards[i],collisionVec))
 				{
 					guards[i].setActive(false);
-					ammo += AMMO_PER_MELEE_KILL;
 					score += SCORE_PER_MELEE_KILL;
+					if(!UnlimitedAmmo)
+						ammo += AMMO_PER_MELEE_KILL;
 				}
 				
-				if(player.collidesWith(guards[i],collisionVec))
+				if(player.collidesWith(guards[i],collisionVec) && !Invincibility)
 				{
 					player.setHealth(player.getHealth()-guardNS::COLLISION_DAMAGE);
 				}
@@ -481,12 +604,27 @@ void NinjaGhost::collisions()
 					{
 						guards[i].setActive(false);
 						shuriken[j].setActive(false);
-						ammo += AMMO_PER_RANGED_KILL;
 						score += SCORE_PER_RANGED_KILL;
+						if(!UnlimitedAmmo)
+							ammo += AMMO_PER_RANGED_KILL;
 					}
 				}
 
 			}
+		}
+
+		if(LevelExit.collidesWith(player,collisionVec))
+		{
+			if(gameState == LEVEL1)
+			{
+				gameState = INTRO2;
+				timeInState = 0;
+			}
+			else if(gameState == LEVEL2)
+			{
+				gameState = GAME_COMPLETE;
+				timeInState = 0;
+			}	
 		}
 	
 	}
@@ -525,6 +663,7 @@ void NinjaGhost::releaseAll()
 	gameOverFont2->onLostDevice();
 	gameCompleteFont1->onLostDevice();
 	gameCompleteFont2->onLostDevice();
+	cheatFont->onLostDevice();
 	GuardTM.onLostDevice();
 	KatanaTM.onLostDevice();
 	ShurikenTM.onLostDevice();
@@ -538,6 +677,7 @@ void NinjaGhost::releaseAll()
 	BackgroundTM.onLostDevice();
 	BlackBoardersTM.onLostDevice();
 	RedBoardersTM.onLostDevice();
+	ExitTM.onLostDevice();
 	Game::releaseAll();
 	return;
 }
@@ -552,6 +692,7 @@ void NinjaGhost::resetAll()
 	gameOverFont2->onResetDevice();
 	gameCompleteFont1->onResetDevice();
 	gameCompleteFont2->onResetDevice();
+	cheatFont->onResetDevice();
 	GuardTM.onResetDevice();
 	KatanaTM.onResetDevice();
 	ShurikenTM.onResetDevice();
@@ -565,6 +706,7 @@ void NinjaGhost::resetAll()
 	BackgroundTM.onResetDevice();
 	BlackBoardersTM.onResetDevice();
 	RedBoardersTM.onResetDevice();
+	ExitTM.onResetDevice();
 	Game::resetAll();
 	return;
 }

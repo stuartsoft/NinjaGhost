@@ -33,7 +33,6 @@ private:
 	Image BlackBoarders;
 	Image RedBoarders;
 
-	
 	TextureManager GuardTM;
 
 	TextureManager BackgroundTM;
@@ -45,11 +44,16 @@ private:
 	TextureManager BulletTM;
 	TextureManager PlatformTM;
 	TextureManager GunTM;
-	
+	TextureManager ExitTM;
+
+	Image shurikenIndicator[MAX_SHURIKEN];
+
 	Katana katana;
 	Shuriken shuriken[MAX_SHURIKEN];
 	
 	Guard guards[MAX_GUARDS];
+
+	Entity LevelExit;
 
 	// game variables
 	float timeSinceThrow;
@@ -59,6 +63,8 @@ private:
 	int ammo;
 	int score;
 	
+	bool Invincibility;
+	bool UnlimitedAmmo;
 
 	// MENU/SPLASH STUFF
 	Menu *mainMenu;
@@ -78,12 +84,16 @@ private:
 	TextDX *gameCompleteFont1;
 	TextDX *gameCompleteFont2;
 
+	TextDX *cheatFont;
+
 	// STATE STUFF
 	float timeInState;
 	void gameStateUpdate();
 	GameStates gameState;
 
-	void LoadLevel1();
+	void LoadLevel();
+
+	float timeSinceMenuPress;
 
 	// functs
 	void spawnShuriken(VECTOR2 pos, VECTOR2 vel);

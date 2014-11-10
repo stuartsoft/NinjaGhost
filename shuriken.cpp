@@ -12,8 +12,8 @@ Shuriken::Shuriken() : Entity()
 	spriteData.x = 0;
 	spriteData.y = 0;
 
-	velocity.x = 0;                             // velocity X
-	velocity.y = 0;                             // velocity Y
+	velocity.x = 0;
+	velocity.y = 0;
 	radius = (shurikenNS::WIDTH + shurikenNS::HEIGHT)/4.0;	
 
 	collisionType = entityNS::CIRCLE;
@@ -27,7 +27,11 @@ void Shuriken::update(float frameTime)
 	spriteData.x += frameTime * velocity.x;
     spriteData.y += frameTime * velocity.y;
 	
+	if(spriteData.x <= -100 || spriteData.x >= GAME_WIDTH+100)
+	{
+		active = false;
+	}
+
 	deltaV.y = shurikenNS::GRAVITY*(frameTime);
 	setDegrees(getDegrees() + shurikenNS::ROTATION_RATE*frameTime);
-
 }

@@ -11,7 +11,7 @@
 #include "input.h"
 #include "game.h"
 
-enum direction {left , right, up, down};
+enum direction {left , right, up, down, none};
 
 namespace entityNS
 {
@@ -143,6 +143,10 @@ class Entity : public Image
 
     // Set radius of collision circle.
     virtual void setCollisionRadius(float r)    {radius = r;}
+
+	virtual void setCollisionBox(int l, int r, int t, int b) {edge.left = l; edge.right = r; edge.top = t; edge.bottom = b;}
+
+	virtual void setCollisionType(entityNS::COLLISION_TYPE t) {collisionType = t;}
 
     ////////////////////////////////////////
     //         Other functions            //
