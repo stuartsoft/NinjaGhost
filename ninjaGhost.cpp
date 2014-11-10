@@ -615,7 +615,7 @@ void NinjaGhost::collisions()
 					score += SCORE_PER_MELEE_KILL;
 					player.setHealth(min(player.getHealth()+HEALTH_PER_MELEE_KILL,Playerns::MAX_HEALTH));
 					if(!UnlimitedAmmo)
-						ammo += AMMO_PER_MELEE_KILL;
+						ammo = min(AMMO_PER_MELEE_KILL+ammo,MAX_SHURIKEN);
 				}
 				
 				if(!flinch && player.collidesWith(guards[i],collisionVec) && !Invincibility)
@@ -634,7 +634,7 @@ void NinjaGhost::collisions()
 						score += SCORE_PER_RANGED_KILL;
 						player.setHealth(min(player.getHealth()+HEALTH_PER_RANGED_KILL,Playerns::MAX_HEALTH));
 						if(!UnlimitedAmmo)
-							ammo += AMMO_PER_RANGED_KILL;
+							ammo = min(AMMO_PER_RANGED_KILL+ammo,MAX_SHURIKEN);
 					}
 				}
 
