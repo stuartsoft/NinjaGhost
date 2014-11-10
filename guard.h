@@ -27,7 +27,7 @@ namespace guardNS
 	const float FLEE_DIST = GAME_WIDTH/4;
 	const float ATTACK_DIST = GAME_WIDTH/3;
 
-	const int COLLISION_DAMAGE = 50;
+	const int COLLISION_DAMAGE = 25;
 
 	const float SHOOT_COOLDOWN = 1.0;
 

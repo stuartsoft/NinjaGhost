@@ -17,7 +17,7 @@ namespace bulletNS
 
 	const int   TEXTURE_COLS = 1;           // texture has 1 columns
 
-	const float COLLISION_DAMAGE = 75;
+	const float COLLISION_DAMAGE = 25;
 }
 
 class Bullet : public Entity

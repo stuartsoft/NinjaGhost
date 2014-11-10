@@ -68,6 +68,7 @@ void NinjaGhost::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init Red boarder texture"));
 	if(!RedBoarders.initialize(graphics, 1280,720,0,&RedBoardersTM))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init Red boarder image"));
+	
 
 	if(!PlatformTM.initialize(graphics, "images\\platform.png"))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error init platform texture"));
@@ -147,13 +148,19 @@ void NinjaGhost::initialize(HWND hwnd)
 	Tutorial.setX(0);
 	Tutorial.setY(0);
 
+	if(!GameOverTM.initialize(graphics, "images\\gameover.png"))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init gameover texture"));
+	if(!GameOverFilter.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &GameOverTM))
+		throw(GameError(gameErrorNS::FATAL_ERROR,"Error init gameover filter"));
+	GameOverFilter.setX(0);
+	GameOverFilter.setY(0);
 
 	if(gameOverFont1->initialize(graphics, 72, true, false, "Forte") == false)
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameover font"));
 	if(gameOverFont2->initialize(graphics, 36, false, false, "Forte") == false)
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gameover font"));
-	gameOverFont1->setFontColor(graphicsNS::RED);
-	gameOverFont2->setFontColor(graphicsNS::RED);
+	gameOverFont1->setFontColor(graphicsNS::WHITE);
+	gameOverFont2->setFontColor(graphicsNS::WHITE);
 
 	if(gameCompleteFont1->initialize(graphics, 72, true, false, "Forte") == false)
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing gamecomplete font"));
@@ -178,6 +185,8 @@ void NinjaGhost::initialize(HWND hwnd)
 	ammo = MAX_AMMO;
 	score = 0;
 
+	flinch = false;
+
 	Invincibility = false;
 	UnlimitedAmmo = false;
 
@@ -198,7 +207,8 @@ void NinjaGhost::reset()
 	player.setVelocity(VECTOR2(0,0));
 	ammo = MAX_AMMO;
 	score = 0;
-	
+	flinch = false;
+
 	for(int i=0; i<MAX_GUARDS; i++)
 	{
 		guards[i].setActive(false);
@@ -381,9 +391,16 @@ void NinjaGhost::update()
 			timeInState = 0;
 		}
 
-		player.getHealth()/Playerns::MAX_HEALTH;
-		
-		RedBoarders.setColorFilter(D3DCOLOR_ARGB(0,255,255,255));		
+		if(flinch)
+		{
+			flinchTime += frameTime;
+			if(flinchTime >= FLINCH_DURATION)
+			{
+				flinch = false;
+				flinchTime = 0;
+			}
+		}
+		healthFilter = D3DCOLOR_ARGB(int((1-player.getHealth()/Playerns::MAX_HEALTH)*255),255,255,255);		
 
 		if(input->isKeyDown(ENTER_KEY))
 			guards[0].setActive(true);
@@ -474,23 +491,28 @@ void NinjaGhost::render()
 		break;
 	case LEVEL1:
 	case LEVEL2:
+	case GAME_OVER:
 		Backgroundimg[0].draw();
 		
-		for(int i=0; i<LEVEL_GUARDS(); i++)
-		{
-			guards[i].draw();
-		}
-
 		for (int i=0;i<LEVEL_PLATFORMS();i++)
 		{
 			platforms[i].draw();
 		}
 		LevelExit.draw();
-		player.draw();
-		if(katana.getActive())
+
+		for(int i=0; i<LEVEL_GUARDS(); i++)
 		{
-			katana.draw();
+			guards[i].draw();
 		}
+
+		if(!flinch)
+			player.draw();
+		else
+			player.draw(graphicsNS::ALPHA25);
+
+		if(katana.getActive())
+			katana.draw();
+
 		for(int i=0; i<MAX_SHURIKEN; i++)
 		{
 			if(shuriken[i].getActive())
@@ -503,12 +525,15 @@ void NinjaGhost::render()
 			shurikenIndicator[i].draw();
 		}
 		BlackBoarders.draw();
-		RedBoarders.draw();
-		break;
-	case GAME_OVER:
-		graphics->setBackColor(graphicsNS::BLACK);
-		gameOverFont1->print("Game Over...",GAME_WIDTH/3,GAME_HEIGHT/3);
-		gameOverFont2->print("Press Enter to return to main menu",GAME_WIDTH/4,2*GAME_HEIGHT/3);
+		RedBoarders.draw(healthFilter);
+
+		if(gameState == GAME_OVER)
+		{
+			//graphics->setBackColor(graphicsNS::BLACK);
+			GameOverFilter.draw();
+			gameOverFont1->print("Game Over...",GAME_WIDTH/3,GAME_HEIGHT/3);
+			gameOverFont2->print("Press Enter to return to main menu",GAME_WIDTH/3,2*GAME_HEIGHT/3);
+		}
 		break;
 	case GAME_COMPLETE:
 		graphics->setBackColor(graphicsNS::WHITE);
@@ -517,6 +542,8 @@ void NinjaGhost::render()
 		break;
 	case TUTORIAL:
 		Tutorial.draw();
+		break;
+	default:
 		break;
 	}
 	
@@ -569,7 +596,7 @@ void NinjaGhost::collisions()
 		{
 			for(int j=0; j<BULLETS_PER_GUARD; j++)
 			{
-				if(guards[i].bullets[j].getActive() && player.collidesWith(guards[i].bullets[j],collisionVec) && !Invincibility)
+				if(!flinch && guards[i].bullets[j].getActive() && player.collidesWith(guards[i].bullets[j],collisionVec) && !Invincibility)
 				{
 					player.setHealth(player.getHealth()-bulletNS::COLLISION_DAMAGE);
 					guards[i].bullets[j].setActive(false);
@@ -591,9 +618,11 @@ void NinjaGhost::collisions()
 						ammo += AMMO_PER_MELEE_KILL;
 				}
 				
-				if(player.collidesWith(guards[i],collisionVec) && !Invincibility)
+				if(!flinch && player.collidesWith(guards[i],collisionVec) && !Invincibility)
 				{
 					player.setHealth(player.getHealth()-guardNS::COLLISION_DAMAGE);
+					flinch = true;
+					flinchTime = 0;
 				}
 	
 				for(int j=0; j<MAX_SHURIKEN; j++)
@@ -676,6 +705,7 @@ void NinjaGhost::releaseAll()
 	BackgroundTM.onLostDevice();
 	BlackBoardersTM.onLostDevice();
 	RedBoardersTM.onLostDevice();
+	GameOverTM.onLostDevice();
 	ExitTM.onLostDevice();
 	Game::releaseAll();
 	return;
@@ -705,6 +735,7 @@ void NinjaGhost::resetAll()
 	BackgroundTM.onResetDevice();
 	BlackBoardersTM.onResetDevice();
 	RedBoardersTM.onResetDevice();
+	GameOverTM.onResetDevice();
 	ExitTM.onResetDevice();
 	Game::resetAll();
 	return;

@@ -26,6 +26,7 @@ public:
 	direction FacingDir();
 	float getfloatoffset();
 	void Player::draw();
+	void Player::draw(DWORD color);
 	void Player::update(float frameTime, Platform platforms[]);
 };
 

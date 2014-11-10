@@ -62,6 +62,8 @@ private:
 	int ammo;
 	int score;
 	
+	bool flinch;
+	float flinchTime;
 	bool Invincibility;
 	bool UnlimitedAmmo;
 
@@ -76,6 +78,8 @@ private:
 	Image Level2Splash;
 	TextureManager TutorialTM;
 	Image Tutorial;
+	TextureManager GameOverTM;
+	Image GameOverFilter;
 
 	TextDX *gameOverFont1;
 	TextDX *gameOverFont2;
@@ -84,6 +88,8 @@ private:
 	TextDX *gameCompleteFont2;
 
 	TextDX *cheatFont;
+
+	COLOR_ARGB healthFilter;
 
 	// STATE STUFF
 	float timeInState;

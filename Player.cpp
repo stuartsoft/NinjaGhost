@@ -34,6 +34,15 @@ void Player::draw()
 		spriteData.y-=floatoffset;
 }
 
+void Player::draw(DWORD color)
+{
+	if (velocity.y <0.001 && velocity.y > -0.001)
+		spriteData.y+=floatoffset;
+	Image::draw(color);              // draw Player
+	if (velocity.y <0.001 && velocity.y > -0.001)
+		spriteData.y-=floatoffset;
+}
+
 direction Player::FacingDir(){
 	return playerdir;
 }

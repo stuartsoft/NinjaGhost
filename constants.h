@@ -52,8 +52,9 @@ const int LEVEL2_GUARDS = 6;
 const int LEVEL1_PLATFORMS = 10;
 const int LEVEL2_PLATFORMS = 10;
 
-const float THROW_COOLDOWN = 1.2;
-const float KATANA_COOLDOWN = 0.7;
+const float THROW_COOLDOWN = 1.2f;
+const float KATANA_COOLDOWN = 0.7f;
+const float FLINCH_DURATION = 0.5f;
 
 const int STARTING_LIVES = 3;
 const int MAX_AMMO = 5;
