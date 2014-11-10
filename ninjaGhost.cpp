@@ -647,6 +647,7 @@ void NinjaGhost::collisions()
 			{
 				gameState = INTRO2;
 				timeInState = 0;
+				reset();
 			}
 			else if(gameState == LEVEL2)
 			{
