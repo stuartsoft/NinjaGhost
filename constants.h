@@ -44,15 +44,15 @@ const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calcul
 const int MAX_PLATFORMS = 30;
 const int MAX_SHURIKEN = 5;
 const int MAX_GUARDS = 25;
-const int BULLETS_PER_GUARD = 15;
+const int BULLETS_PER_GUARD = 10;
 
 const int LEVEL1_GUARDS = 6;
-const int LEVEL2_GUARDS = 6;
+const int LEVEL2_GUARDS = 11;
 
 const int LEVEL1_PLATFORMS = 14;
-const int LEVEL2_PLATFORMS = 10;
+const int LEVEL2_PLATFORMS = 21;
 
-const float THROW_COOLDOWN = 1.2f;
+const float THROW_COOLDOWN = 0.9f;
 const float KATANA_COOLDOWN = 0.7f;
 const float FLINCH_DURATION = 0.5f;
 
